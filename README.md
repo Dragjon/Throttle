@@ -1,7 +1,7 @@
 # Engine
 Throttle is a UCI chess engine created using Sebastian Lague's chess framework.
-# Features
-***Search:
+## Features
+Search:
     * Fail-Soft Negamax Search
     * Principle Variation Search
     * Quiescence search
