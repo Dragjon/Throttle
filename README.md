@@ -31,6 +31,8 @@ Throttle is a UCI chess engine developed using Sebastian Lague's chess framework
 - Hard and Soft Time Management
 
 ### Evaluation:
+- Tempo of 15
+- Monility bonus
 - Material values (PeSTO)
 - Piece square tables (PeSTO)
 - Tapered Evaluation
