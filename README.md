@@ -3,14 +3,15 @@
 Throttle is a UCI chess engine developed using Sebastian Lague's chess framework.
 
 ## Version
-1.2
+2.0
 
 ## Features
-
+* Feature elo gain after 1.4
+** Feature added at version after 1.4
 ### Search:
-- Fail-Soft Negamax Search
-- Principle Variation Search
-- Quiescence search
+#### Fail-Soft Negamax Search
+#### Principle Variation Search
+- Triple PVS **1.5 21.3 +/- 11.1,
 
 ### Pruning:
 - A/B Pruning
@@ -29,16 +30,17 @@ Throttle is a UCI chess engine developed using Sebastian Lague's chess framework
 - TT Moves
 - MVV-LVA (for good captures and quiets)
 - Killer moves (quiets)
+- History moves (quiets) **v2.0 *67.9 +/- 20.9
 
 ### Time Management:
 - Hard and Soft Time Management
 
 ### Evaluation:
-- Tempo of 15
-- Monility bonus
 - Material values (PeSTO)
 - Piece square tables (PeSTO)
-- Tapered Evaluation
+- Tapered Eval
+- Tempo
+- Mobility
 
 ## Special thanks to (in no particular order)
 - Ciekce (For helping with a lot of engine-related stuff)
