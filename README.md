@@ -41,7 +41,7 @@ Estimate: 2438 - 2538
 
 ### Ordering:
 - TT Moves
-- MVV-LVA (for good captures and quiets)
+- MVV-LVA (for good captures)
 - Killer moves (quiets)
 - History moves (quiets) ```v2.0``` ```67.9 +/- 20.9```
 
