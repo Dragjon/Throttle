@@ -39,3 +39,18 @@ Throttle is a UCI chess engine developed using Sebastian Lague's chess framework
 - Material values (PeSTO)
 - Piece square tables (PeSTO)
 - Tapered Evaluation
+
+## Special thanks to (in no particular order)
+- Ciekce (For helping with a lot of engine-related stuff)
+- cj5716 (For helping with a lot of engine-related stuff)
+- arandomnoob (For helping with a lot of engine-related stuff)
+- Toanth (For hosting the 400 token challenge to really get me into chess programming)
+- jw (nnue stuff and bullet)
+- and many other people in sebastian lague's chess programming server
+
+## Engines I took inspiration from (in no particular order)
+- Boychesser
+- Smol.cs
+- 200 token monstrosity
+- NOSPRT
+- Atadofanoobbot
