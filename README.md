@@ -54,3 +54,4 @@ Throttle is a UCI chess engine developed using Sebastian Lague's chess framework
 - 200 token monstrosity
 - NOSPRT
 - Atadofanoobbot
+- King Gambot IV
