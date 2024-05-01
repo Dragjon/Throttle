@@ -6,7 +6,7 @@ using static ChessChallenge.API.BitboardHelper;
 /*
 | Throttle - A c# UCI chess engine | SSS Version
   --------------------------------
-Version: 2.0
+Version: 2.1
 
 * Feature elo gain after 1.4
 ** Feature added at version after 1.4
@@ -15,9 +15,10 @@ Features:
     Search:
         - Fail-Soft Negamax Search
         - Principle Variation Search
-            - Triple PVS **1.5 21.3 +/- 11.1,
+            - Triple PVS **1.5 *21.3 +/- 11.1,
         - Quiescence search
         - Pruning:
+            - Actual TT pruning **v2.1 *136.4 +/- 31.2
             - A/B Pruning
             - Null Move Pruning
             - Reverse Futility Pruning
@@ -183,7 +184,14 @@ public class MyBot : IChessBot
     int[] game_phase_inc = { 0, 1, 1, 2, 4, 0, };
     int[] mobility_weights = { 17, 5, 6, 5, 4, 6 };
 
-    Move[] ttMove = new Move[16777216];
+    // this tuple is 24 bytes, so the transposition table is precisely 192MiB (~201 MB)
+    readonly (
+        ulong, // hash
+        ushort, // moveRaw
+        int, // score
+        int, // depth
+        int // bound BOUND_EXACT=[1, 2147483647), BOUND_LOWER=2147483647, BOUND_UPPER=0
+    )[] transpositionTable = new (ulong, ushort, int, int, int)[0x800000];
 
     // Variables for search
     int rfpMargin = 65;
@@ -273,6 +281,26 @@ public class MyBot : IChessBot
             if (board.IsDraw())
                 return 0;
 
+            bool nonPv = alpha + 1 >= beta;
+
+            ref var tt = ref transpositionTable[board.ZobristKey & 0x7FFFFF];
+            var (ttHash, ttMoveRaw, score, ttDepth, ttBound) = tt;
+
+            bool ttHit = ttHash == board.ZobristKey;
+            int oldAlpha = alpha;
+
+            if (ttHit)
+            {
+                if (ttBound switch
+                {
+                    2147483647 /* BOUND_LOWER */ => score >= beta,
+                    0 /* BOUND_UPPER */ => score <= alpha,
+                    // exact cutoffs at pv nodes causes problems, but need it in qsearch for matefinding
+                    _ /* BOUND_EXACT */ => nonPv,
+                })
+                    return score;
+            }
+
             // Standing Pat Pruning
             if (standPat >= beta)
                 return standPat;
@@ -280,13 +308,15 @@ public class MyBot : IChessBot
             if (alpha < standPat)
                 alpha = standPat;
 
+            Move bestMove = Move.NullMove;
+
             // TT + MVV-LVA ordering
-            foreach (Move move in board.GetLegalMoves(true).OrderByDescending(move => move == ttMove[key] ? 9_000_000_000_000_000_000
+            foreach (Move move in board.GetLegalMoves(true).OrderByDescending(move => ttHit && move.RawValue == ttMoveRaw ? 9_000_000_000_000_000_000
                                           : 1_000_000_000_000_000_000 * (long)move.CapturePieceType - (long)move.MovePieceType))
             {
                 nodes++;
                 board.MakeMove(move);
-                int score = -qSearch(-beta, -alpha);
+                score = -qSearch(-beta, -alpha);
                 board.UndoMove(move);
 
                 if (score > alpha)
@@ -294,7 +324,7 @@ public class MyBot : IChessBot
 
                 if (score > bestScore)
                 {
-                    ttMove[key] = move;
+                    bestMove = move;
                     bestScore = score;
                 }
 
@@ -303,6 +333,18 @@ public class MyBot : IChessBot
                     break;
 
             }
+
+            tt = (
+board.ZobristKey,
+alpha > oldAlpha // don't update best move if upper bound
+? bestMove.RawValue
+: ttMoveRaw,
+Math.Clamp(bestScore, -20000, 20000),
+0,
+bestScore >= beta
+? 2147483647 /* BOUND_LOWER */
+: alpha - oldAlpha /* BOUND_UPPER if alpha == oldAlpha else BOUND_EXACT */
+);
 
             return bestScore;
         }
@@ -317,11 +359,32 @@ public class MyBot : IChessBot
             bool isRoot = ply == 0;
             bool nonPv = alpha + 1 >= beta;
 
+            ref var tt = ref transpositionTable[board.ZobristKey & 0x7FFFFF];
+            var (ttHash, ttMoveRaw, score, ttDepth, ttBound) = tt;
+
+            bool ttHit = ttHash == board.ZobristKey;
+            int oldAlpha = alpha;
+
             // Terminal nodes
             if (board.IsInCheckmate() && !isRoot)
                 return mateScore + board.PlyCount;
             if (board.IsDraw() && !isRoot)
                 return 0;
+
+            if (ttHit)
+            {
+                if (ttDepth >= depth && ttBound switch
+                {
+                    2147483647 /* BOUND_LOWER */ => score >= beta,
+                    0 /* BOUND_UPPER */ => score <= alpha,
+                    // exact cutoffs at pv nodes causes problems, but need it in qsearch for matefinding
+                    _ /* BOUND_EXACT */ => nonPv,
+                })
+                    return score;
+            }
+            else if (depth > 3)
+                // Internal iterative reduction
+                depth--;
 
             // Start Quiescence Search
             if (depth < 1)
@@ -335,10 +398,6 @@ public class MyBot : IChessBot
 
             // Index for killers
             int killerIndex = ply & 4095;
-
-            // Budget Internal Iterative Reductions
-            if (ttMove[key] == Move.NullMove)
-                depth--;
 
             // Reverse futility pruning
             if (eval - rfpMargin * depth >= beta && !board.IsInCheck()) return eval;
@@ -357,8 +416,9 @@ public class MyBot : IChessBot
             // orderVariable(priority)
             // TT(0),  MVV-LVA ordering(1),  Killer Moves(2)
 
+            Move bestMove = Move.NullMove;
             Move[] legals = board.GetLegalMoves();
-            foreach (Move move in legals.OrderByDescending(move => move == ttMove[key] ? 9_000_000_000_000_000_000
+            foreach (Move move in legals.OrderByDescending(move => ttHit && move.RawValue == ttMoveRaw ? 9_000_000_000_000_000_000
                                           : move.IsCapture ? 1_000_000_000_000_000_000 * (long)move.CapturePieceType - (long)move.MovePieceType
                                           : move == killers[killerIndex] ? 500_000_000_000_000_000
                                           : history[move.RawValue & 4095]))
@@ -371,7 +431,7 @@ public class MyBot : IChessBot
                 // Check extension
                 if (board.IsInCheck()) moveExtension++;
 
-                int score = 0;
+                score = 0;
 
                 // Principle variation search
                 if (moveCount == 1)
@@ -401,7 +461,7 @@ public class MyBot : IChessBot
                 if (score > bestScore)
                 {
                     bestScore = score;
-                    ttMove[key] = move;
+                    bestMove = move;
                     if (isRoot)
                         rootBestMove = move;
                 }
@@ -425,6 +485,19 @@ public class MyBot : IChessBot
                     break;
 
             }
+
+            tt = (
+    board.ZobristKey,
+    alpha > oldAlpha // don't update best move if upper bound
+        ? bestMove.RawValue
+        : ttMoveRaw,
+    Math.Clamp(bestScore, -20000, 20000),
+    depth,
+    bestScore >= beta
+        ? 2147483647 /* BOUND_LOWER */
+        : alpha - oldAlpha /* BOUND_UPPER if alpha == oldAlpha else BOUND_EXACT */
+        );
+
             return bestScore;
         }
 
