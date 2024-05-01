@@ -4,15 +4,18 @@ using ChessChallenge.API;
 using static ChessChallenge.API.BitboardHelper;
 
 /*
-| Throttle - A c# UCI chess engine |
+| Throttle - A c# UCI chess engine | SSS Version
   --------------------------------
-Version: 1.2
+Version: 2.0
 
+* Feature elo gain after 1.4
+** Feature added at version after 1.4
 Features:
     
     Search:
         - Fail-Soft Negamax Search
         - Principle Variation Search
+            - Triple PVS **1.5 21.3 +/- 11.1,
         - Quiescence search
         - Pruning:
             - A/B Pruning
@@ -28,6 +31,7 @@ Features:
             - TT Moves
             - MVV-LVA (for good captures and quiets)
             - Killer moves (quiets)
+            - History moves (quiets) **v2.0 *67.9 +/- 20.9
         - Time management:
             - Hard and Soft time management
 
@@ -35,9 +39,10 @@ Features:
         - Material values (PeSTO)
         - Piece square tables (PeSTO)
         - Tapered Eval
+        - Tempo
+        - Mobility
     
 */
-
 
 public class MyBot : IChessBot
 {
@@ -172,6 +177,7 @@ public class MyBot : IChessBot
 
 };
     // Evaluation Weights
+    int tempo = 10;
     int[] piece_values_mid = { 82, 337, 365, 477, 1025, 0 };
     int[] piece_values_end = { 94, 281, 297, 512, 936, 0 };
     int[] game_phase_inc = { 0, 1, 1, 2, 4, 0, };
@@ -180,7 +186,7 @@ public class MyBot : IChessBot
     Move[] ttMove = new Move[16777216];
 
     // Variables for search
-    int rfpMargin = 80;
+    int rfpMargin = 65;
     int futilityMargin = 337;
     int mateScore = -20000;
     int infinity = 30000;
@@ -193,6 +199,9 @@ public class MyBot : IChessBot
         // Killer moves, 1 for each depth
         Move[] killers = new Move[4096];
 
+        // History moves
+        int[] history = new int[4096];
+
         int globalDepth = 1; // To be incremented for each iterative loop
         ulong nodes; // To keep track of searched positions in 1 iterative loop
         Move rootBestMove = Move.NullMove;
@@ -200,38 +209,50 @@ public class MyBot : IChessBot
         // Evaluation
         int Eval()
         {
-            int turn = board.IsWhiteToMove ? 1 : -1;
+            int score = 0;
+            int phase = 0;
             int mg_score = 0;
             int eg_score = 0;
-            int game_phase = 0;
-            int mg_phase = 0;
-            int eg_phase = 0;
-            int tempo = 15;
-            foreach (var pl in board.GetAllPieceLists())
+            int turn = board.IsWhiteToMove ? 1 : -1;
+            int piece_mobility;
+            int color;
+
+            foreach (bool isWhite in new[] { !board.IsWhiteToMove, board.IsWhiteToMove })
             {
-                foreach (var piece in pl)
+                score = -score;
+                color = isWhite ? 1 : -1;
+
+                //       None (skipped)               King
+                for (var pieceIndex = 0; ++pieceIndex <= 6;)
                 {
+                    var bitboard = board.GetPieceBitboard((PieceType)pieceIndex, isWhite);
 
-                    int piece_type = (int)piece.PieceType - 1;
-                    int color = pl.IsWhitePieceList ? 1 : -1;
-                    bool color_bool = pl.IsWhitePieceList;
-                    game_phase += game_phase_inc[piece_type];
-                    int color_sq = (piece.Square.Rank * 8 + piece.Square.File) ^ (pl.IsWhitePieceList ? 56 : 0); // Flip sqauare for white
-                    mg_score += color * (mg_pst_values[piece_type, color_sq] + piece_values_mid[piece_type] + GetNumberOfSetBits(GetPieceAttacks(piece.PieceType, piece.Square, board, color_bool)) * mobility_weights[piece_type]); // PST + Material
-                    eg_score += color * (eg_pst_values[piece_type, color_sq] + piece_values_end[piece_type] + GetNumberOfSetBits(GetPieceAttacks(piece.PieceType, piece.Square, board, color_bool)) * mobility_weights[piece_type]);
+                    // This and the following line is an efficient way to loop over each piece of a certain type.
+                    // Instead of looping each square, we can skip empty squares by looking at a bitboard of each piece,
+                    // and incrementally removing squares from it. More information: https://www.chessprogramming.org/Bitboards
+                    while (bitboard != 0)
+                    {
+                        var sq = ClearAndGetIndexOfLSB(ref bitboard);
 
+                        piece_mobility = GetNumberOfSetBits(GetPieceAttacks((PieceType)pieceIndex, new Square(sq), board, isWhite)) * mobility_weights[pieceIndex - 1];
+
+                        if (isWhite) sq ^= 56;
+                        phase += game_phase_inc[pieceIndex - 1];
+
+                        mg_score += color * (mg_pst_values[pieceIndex - 1, sq] + piece_values_mid[pieceIndex - 1] + piece_mobility); // PST + Material
+                        eg_score += color * (eg_pst_values[pieceIndex - 1, sq] + piece_values_end[pieceIndex - 1] + piece_mobility);
+                    }
                 }
             }
 
-
             // Tapered eval
-            mg_phase = game_phase;
-            if (mg_phase > 24)
-                mg_phase = 24;
-            eg_phase = 24 - mg_phase;
+            if (phase > 24)
+                phase = 24;
+            int eg_phase = 24 - phase;
 
 
-            return tempo + turn * (((mg_score * mg_phase) + (eg_score * eg_phase)) / 24);
+            return tempo + turn * (((mg_score * phase) + (eg_score * eg_phase)) / 24);
+
         }
 
         // Quiescence Search
@@ -260,7 +281,8 @@ public class MyBot : IChessBot
                 alpha = standPat;
 
             // TT + MVV-LVA ordering
-            foreach (Move move in board.GetLegalMoves(true).OrderByDescending(move => (ttMove[key] == move, move.CapturePieceType, 0 - move.MovePieceType)))
+            foreach (Move move in board.GetLegalMoves(true).OrderByDescending(move => move == ttMove[key] ? 9_000_000_000_000_000_000
+                                          : 1_000_000_000_000_000_000 * (long)move.CapturePieceType - (long)move.MovePieceType))
             {
                 nodes++;
                 board.MakeMove(move);
@@ -293,7 +315,7 @@ public class MyBot : IChessBot
             if (depth > 1 && timer.MillisecondsElapsedThisTurn >= timer.MillisecondsRemaining / hardBoundTimeRatio) throw null;
 
             bool isRoot = ply == 0;
-            bool nonPv = alpha + 1 == beta;
+            bool nonPv = alpha + 1 >= beta;
 
             // Terminal nodes
             if (board.IsInCheckmate() && !isRoot)
@@ -334,7 +356,12 @@ public class MyBot : IChessBot
 
             // orderVariable(priority)
             // TT(0),  MVV-LVA ordering(1),  Killer Moves(2)
-            foreach (Move move in board.GetLegalMoves().OrderByDescending(move => (ttMove[key] == move, move.CapturePieceType, killers[killerIndex] == move, 0 - move.MovePieceType)))
+
+            Move[] legals = board.GetLegalMoves();
+            foreach (Move move in legals.OrderByDescending(move => move == ttMove[key] ? 9_000_000_000_000_000_000
+                                          : move.IsCapture ? 1_000_000_000_000_000_000 * (long)move.CapturePieceType - (long)move.MovePieceType
+                                          : move == killers[killerIndex] ? 500_000_000_000_000_000
+                                          : history[move.RawValue & 4095]))
             {
                 moveCount++;
                 nodes++;
@@ -353,8 +380,11 @@ public class MyBot : IChessBot
                 }
                 else
                 {
+                    int reduction = moveCount > 3 && nonPv && !move.IsCapture ? 1 : 0;
+                    score = -search(depth - 1 + moveExtension - reduction, ply + 1, -alpha - 1, -alpha);
 
-                    score = -search(depth - 1 + moveExtension, ply + 1, -alpha - 1, -alpha);
+                    if (reduction > 0 && score > alpha)
+                        score = -search(depth - 1 + moveExtension, ply + 1, -alpha - 1, -alpha);
 
                     if (score > alpha && score < beta)
                     {
@@ -379,6 +409,10 @@ public class MyBot : IChessBot
                 // A/B pruning
                 if (score >= beta)
                 {
+
+                    if (!move.IsCapture)
+                        history[move.RawValue & 4095] += depth * depth;
+
                     // Keep track of the first killers for each ply
                     if ((killers[killerIndex] == Move.NullMove) && !move.IsCapture)
                         killers[killerIndex] = move;
@@ -386,8 +420,8 @@ public class MyBot : IChessBot
                 }
 
 
-                // Futility pruning
-                if (nonPv && depth == 1 && !move.IsCapture && (eval + futilityMargin < alpha))
+                // Extended futility pruning
+                if (nonPv && depth <= 4 && !move.IsCapture && (eval + futilityMargin * depth < alpha))
                     break;
 
             }
@@ -396,6 +430,8 @@ public class MyBot : IChessBot
 
         try
         {
+            nodes = 0;
+
             // Soft time limit
             for (; timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / softBoundTimeRatio; ++globalDepth)
             {
@@ -403,15 +439,9 @@ public class MyBot : IChessBot
                 int beta = -alpha;
                 killers = new Move[4096];
 
-                nodes = 0;
-
                 int score = search(globalDepth, 0, alpha, beta);
 
-                bool isMateScore = score > -mateScore - 500 || score < mateScore + 500;
-
                 Console.WriteLine($"info depth {globalDepth} time {timer.MillisecondsElapsedThisTurn} nodes {nodes} nps {Convert.ToInt32(1000 * nodes / ((ulong)timer.MillisecondsElapsedThisTurn + 0.001))} score cp {score} pv {ChessChallenge.Chess.MoveUtility.GetMoveNameUCI(new(rootBestMove.RawValue))}");
-
-                if (isMateScore) break; // Give up when mate is inevitable or stop searching when mate is found
             }
         }
         catch { }
