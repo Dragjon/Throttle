@@ -70,3 +70,6 @@ Estimate: 2438 - 2538
 - NOSPRT
 - Atadofanoobbot
 - King Gambot IV
+
+## TODO
+- Make it stronger 
