@@ -12,7 +12,7 @@ Throttle is a UCI chess engine developed using Sebastian Lague's chess framework
 - Triple PVS ```v1.5``` ```21.3 +/- 11.1```
 
 ### Pruning:
-- Actual TT pruning ```**v2.1 *136.4 +/- 31.2```
+- Actual TT pruning ```v2.1``` ```136.4 +/- 31.2```
 - A/B Pruning
 - Null Move Pruning
 - Reverse Futility Pruning
@@ -29,7 +29,7 @@ Throttle is a UCI chess engine developed using Sebastian Lague's chess framework
 - TT Moves
 - MVV-LVA (for good captures and quiets)
 - Killer moves (quiets)
-- History moves (quiets) ```**v2.0 *67.9 +/- 20.9```
+- History moves (quiets) ```v2.0``` ```67.9 +/- 20.9```
 
 ### Time Management:
 - Hard and Soft Time Management
