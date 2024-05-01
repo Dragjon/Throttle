@@ -27,7 +27,7 @@ namespace Chess_Challenge.Cli
 
         private void HandleUci()
         {
-            Console.WriteLine("id name PythasaurusDaemon V1");
+            Console.WriteLine("id name Throttle V2.1");
             Console.WriteLine("id author Chess123easy");
             Console.WriteLine();
             Console.WriteLine("uciok");
@@ -38,7 +38,7 @@ namespace Chess_Challenge.Cli
             var writingFen = false;
             var writingMoves = false;
             var fenBuilder = new StringBuilder();
-            
+
             for (var wordIndex = 0; wordIndex < words.Count; wordIndex++)
             {
                 var word = words[wordIndex];
