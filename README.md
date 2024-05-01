@@ -2,6 +2,9 @@
 <img src="https://github.com/Dragjon/Throttle/blob/main/images/throttle.png" width="300" height="300">
 Throttle is a UCI chess engine developed using Sebastian Lague's chess framework.
 
+## Version
+1.2
+
 ## Features
 
 ### Search:
