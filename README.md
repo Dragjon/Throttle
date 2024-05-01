@@ -11,8 +11,8 @@ Throttle is a UCI chess engine developed using Sebastian Lague's chess framework
 ** Feature added at version after 1.4
 ```
 ### Search:
-#### Fail-Soft Negamax Search
-#### Principle Variation Search
+#### *Fail-Soft Negamax Search
+#### *Principle Variation Search
 - Triple PVS **1.5 21.3 +/- 11.1,
 
 ### Pruning:
