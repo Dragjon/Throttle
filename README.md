@@ -34,7 +34,8 @@ Estimate: 2438 - 2538
 - Quiescence Search Standing Pat Pruning
 
 ### Reductions:
-- Budget Internal Iterative Reduction
+- Internal Iterative Reduction
+- Late move reductions with triple pvs
 
 ### Extensions:
 - Check Extensions
