@@ -34,14 +34,15 @@ Estimate: 2438 - 2538
 - Quiescence Search Standing Pat Pruning
 
 ### Reductions:
-- Budget Internal Iterative Reduction
+- Internal Iterative Reduction
+- Late move reductions with triple pvs
 
 ### Extensions:
 - Check Extensions
 
 ### Ordering:
 - TT Moves
-- MVV-LVA (for good captures and quiets)
+- MVV-LVA (for good captures)
 - Killer moves (quiets)
 - History moves (quiets) ```v2.0``` ```67.9 +/- 20.9```
 
@@ -70,3 +71,6 @@ Estimate: 2438 - 2538
 - NOSPRT
 - Atadofanoobbot
 - King Gambot IV
+
+## TODO
+- Make it stronger 
