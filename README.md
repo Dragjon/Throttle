@@ -92,6 +92,13 @@ Score of ASP vs Original: 1307 - 1139 - 1072  [0.524] 3518
 Elo difference: 16.6 +/- 9.6, LOS: 100.0 %, DrawRatio: 30.5 %
 SPRT: llr 2.96 (100.4%), lbound -2.94, ubound 2.94 - H1 was accepted
 
+v2.5 - Delta pruning
+Score of DeltaPrune vs Original: 2000 - 1817 - 1615  [0.517] 5432
+...      DeltaPrune playing White: 1252 - 668 - 796  [0.608] 2716
+...      DeltaPrune playing Black: 748 - 1149 - 819  [0.426] 2716
+...      White vs Black: 2401 - 1416 - 1615  [0.591] 5432
+Elo difference: 11.7 +/- 7.7, LOS: 99.8 %, DrawRatio: 29.7 %
+SPRT: llr 2.95 (100.2%), lbound -2.94, ubound 2.94 - H1 was accepted
 ```
 
 ## Special thanks to (in no particular order)
