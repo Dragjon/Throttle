@@ -21,6 +21,7 @@ Estimate: 2438 - 2538
 
 ## Features
 ### Search:
+- Budget Aspiration window ```v2.4``` ```16.6 +/- 9.6```
 - Fail-Soft Negamax Search
 - Principle Variation Search
 - Triple PVS ```v1.5``` ```21.3 +/- 11.1```
@@ -56,6 +57,37 @@ Estimate: 2438 - 2538
 - Tapered Eval
 - Tempo
 - Mobility
+
+## Log of feature addition
+```
+Log after v2.1
+---------------
+v2.2 - SWAR test for compressed eval for speedup
+Score of SWARtest vs Original: 5383 - 5132 - 4808  [0.508] 15323
+...      SWARtest playing White: 3347 - 1892 - 2423  [0.595] 7662
+...      SWARtest playing Black: 2036 - 3240 - 2385  [0.421] 7661
+...      White vs Black: 6587 - 3928 - 4808  [0.587] 15323
+Elo difference: 5.7 +/- 4.6, LOS: 99.3 %, DrawRatio: 31.4 %
+SPRT: llr 2.95 (100.3%), lbound -2.94, ubound 2.94 - H1 was accepted
+
+v2.3  - Check for non pv before pruning or reducing in tt
+(COMPUTER BLUESCREENED HALFWAY SO THIS IS JUST PARTIAL RESULTS)
+Score of NoTTCutoffsInPv vs Original: 2204 - 2080 - 1824  [0.510] 6108
+...      NoTTCutoffsInPv playing White: 1359 - 788 - 908  [0.593] 3055
+...      NoTTCutoffsInPv playing Black: 845 - 1292 - 916  [0.427] 3053
+...      White vs Black: 2651 - 1633 - 1824  [0.583] 6108
+Elo difference: 7.1 +/- 7.3, LOS: 97.1 %, DrawRatio: 29.9 %
+SPRT: llr 1.64 (55.8%), lbound -2.94, ubound 2.94
+
+v2.4 - Budget aspiration window search
+Score of ASP vs Original: 1307 - 1139 - 1072  [0.524] 3518
+...      ASP playing White: 810 - 433 - 516  [0.607] 1759
+...      ASP playing Black: 497 - 706 - 556  [0.441] 1759
+...      White vs Black: 1516 - 930 - 1072  [0.583] 3518
+Elo difference: 16.6 +/- 9.6, LOS: 100.0 %, DrawRatio: 30.5 %
+SPRT: llr 2.96 (100.4%), lbound -2.94, ubound 2.94 - H1 was accepted
+
+```
 
 ## Special thanks to (in no particular order)
 - Ciekce (For helping with a lot of engine-related stuff)
