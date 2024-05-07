@@ -6,13 +6,14 @@ using static ChessChallenge.API.BitboardHelper;
 /*
 | Throttle - A c# UCI chess engine | SSS Version
   --------------------------------
-Version: 2.2
+Version: 2.4
 
 * Feature elo gain after 1.4
 ** Feature added at version after 1.4
 Features:
     
     Search:
+        - Budget aspiration window **2.4 *16.6 +/- 9.6
         - Fail-Soft Negamax Search
         - Principle Variation Search
             - Triple PVS **1.5 *21.3 +/- 11.1,
@@ -56,6 +57,23 @@ Score of SWARtest vs Original: 5383 - 5132 - 4808  [0.508] 15323
 ...      White vs Black: 6587 - 3928 - 4808  [0.587] 15323
 Elo difference: 5.7 +/- 4.6, LOS: 99.3 %, DrawRatio: 31.4 %
 SPRT: llr 2.95 (100.3%), lbound -2.94, ubound 2.94 - H1 was accepted
+
+v2.3  - Check for non pv before pruning or reducing in tt
+(COMPUTER BLUESCREENED HALFWAY SO THIS IS JUST PARTIAL RESULTS)
+Score of NoTTCutoffsInPv vs Original: 2204 - 2080 - 1824  [0.510] 6108
+...      NoTTCutoffsInPv playing White: 1359 - 788 - 908  [0.593] 3055
+...      NoTTCutoffsInPv playing Black: 845 - 1292 - 916  [0.427] 3053
+...      White vs Black: 2651 - 1633 - 1824  [0.583] 6108
+Elo difference: 7.1 +/- 7.3, LOS: 97.1 %, DrawRatio: 29.9 %
+SPRT: llr 1.64 (55.8%), lbound -2.94, ubound 2.94
+
+v2.4 - Budget aspiration window search
+Score of ASP vs Original: 1307 - 1139 - 1072  [0.524] 3518
+...      ASP playing White: 810 - 433 - 516  [0.607] 1759
+...      ASP playing Black: 497 - 706 - 556  [0.441] 1759
+...      White vs Black: 1516 - 930 - 1072  [0.583] 3518
+Elo difference: 16.6 +/- 9.6, LOS: 100.0 %, DrawRatio: 30.5 %
+SPRT: llr 2.96 (100.4%), lbound -2.94, ubound 2.94 - H1 was accepted
 
 */
 public class MyBot : IChessBot
@@ -165,6 +183,7 @@ public class MyBot : IChessBot
     int infinity = 30000;
     int hardBoundTimeRatio = 10;
     int softBoundTimeRatio = 40;
+    int lastScore = 0;
 
 
     public Move Think(Board board, Timer timer)
@@ -244,8 +263,6 @@ public class MyBot : IChessBot
             if (board.IsDraw())
                 return 0;
 
-            bool nonPv = alpha + 1 >= beta;
-
             ref var tt = ref transpositionTable[board.ZobristKey & 0x7FFFFF];
             var (ttHash, ttMoveRaw, score, ttDepth, ttBound) = tt;
 
@@ -259,7 +276,7 @@ public class MyBot : IChessBot
                     2147483647 /* BOUND_LOWER */ => score >= beta,
                     0 /* BOUND_UPPER */ => score <= alpha,
                     // exact cutoffs at pv nodes causes problems, but need it in qsearch for matefinding
-                    _ /* BOUND_EXACT */ => nonPv,
+                    _ /* BOUND_EXACT */ => true,
                 })
                     return score;
             }
@@ -309,7 +326,7 @@ bestScore >= beta
 : alpha - oldAlpha /* BOUND_UPPER if alpha == oldAlpha else BOUND_EXACT */
 );
 
-            return bestScore;
+            return lastScore = bestScore;
         }
 
         // Fail-Soft Negamax Search
@@ -334,18 +351,18 @@ bestScore >= beta
             if (board.IsDraw() && !isRoot)
                 return 0;
 
-            if (ttHit)
+            if (nonPv && ttHit)
             {
                 if (ttDepth >= depth && ttBound switch
                 {
                     2147483647 /* BOUND_LOWER */ => score >= beta,
                     0 /* BOUND_UPPER */ => score <= alpha,
                     // exact cutoffs at pv nodes causes problems, but need it in qsearch for matefinding
-                    _ /* BOUND_EXACT */ => nonPv,
+                    _ /* BOUND_EXACT */ => true,
                 })
                     return score;
             }
-            else if (depth > 3)
+            else if (nonPv && depth > 3)
                 // Internal iterative reduction
                 depth--;
 
@@ -387,6 +404,7 @@ bestScore >= beta
                                           : history[move.RawValue & 4095]))
             {
                 moveCount++;
+
                 nodes++;
 
                 int reduction = moveCount > 3 && nonPv && !move.IsCapture ? 1 : 0;
@@ -432,19 +450,21 @@ bestScore >= beta
                     bestMove = move;
                     if (isRoot)
                         rootBestMove = move;
-                }
 
-                // A/B pruning
-                if (score >= beta)
-                {
+                    // A/B pruning
+                    if (score >= beta)
+                    {
 
-                    if (!move.IsCapture)
-                        history[move.RawValue & 4095] += depth * depth;
+                        if (!move.IsCapture)
+                        {
+                            history[move.RawValue & 4095] += depth * depth;
 
-                    // Keep track of the first killers for each ply
-                    if ((killers[killerIndex] == Move.NullMove) && !move.IsCapture)
-                        killers[killerIndex] = move;
-                    break;
+                            // Keep track of the first killers for each ply
+                            if (killers[killerIndex] == Move.NullMove)
+                                killers[killerIndex] = move;
+                        }
+                        break;
+                    }
                 }
 
 
@@ -466,7 +486,7 @@ bestScore >= beta
         : alpha - oldAlpha /* BOUND_UPPER if alpha == oldAlpha else BOUND_EXACT */
         );
 
-            return bestScore;
+            return lastScore = bestScore;
         }
 
         try
@@ -478,9 +498,11 @@ bestScore >= beta
             {
                 int alpha = -infinity;
                 int beta = -alpha;
+                int score;
                 killers = new Move[4096];
 
-                int score = search(globalDepth, 0, alpha, beta);
+                if (Math.Abs(lastScore - (score = search(globalDepth, 0, lastScore - 41, lastScore + 41))) >= 41)
+                    score = search(globalDepth, 0, alpha, beta);
 
                 Console.WriteLine($"info depth {globalDepth} time {timer.MillisecondsElapsedThisTurn} nodes {nodes} nps {Convert.ToInt32(1000 * nodes / ((ulong)timer.MillisecondsElapsedThisTurn + 0.001))} score cp {score} pv {ChessChallenge.Chess.MoveUtility.GetMoveNameUCI(new(rootBestMove.RawValue))}");
             }
