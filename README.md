@@ -7,6 +7,7 @@ Throttle is a UCI chess engine developed using Sebastian Lague's chess framework
 
 ## Rating
 ```
+Testing for v2.1
 Rank Name                          Elo     +/-   Games   Score    Draw
    1 polaris1.4.1popcnt            338     199      36   87.5%    8.3%
    2 throttlev2.1                  244     146      38   80.3%    7.9%
