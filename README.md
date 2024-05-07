@@ -104,6 +104,7 @@ SPRT: llr 2.96 (100.4%), lbound -2.94, ubound 2.94 - H1 was accepted
 - NOSPRT
 - Atadofanoobbot
 - King Gambot IV
+- Viridithas (wiki)
 
 ## TODO
 - Make it stronger 
