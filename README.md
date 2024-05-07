@@ -106,5 +106,11 @@ SPRT: llr 2.96 (100.4%), lbound -2.94, ubound 2.94 - H1 was accepted
 - King Gambot IV
 - Viridithas (wiki)
 
+## Resourced I found useful
+- https://minuskelvin.net/chesswiki/
+- https://www.chessprogramming.org/
+- https://github.com/cosmobobak/viridithas/blob/master/wiki.md
+- https://discord.gg/S3MMh67q
+
 ## TODO
 - Make it stronger 
