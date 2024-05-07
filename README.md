@@ -20,6 +20,10 @@ Rank Name                          Elo     +/-   Games   Score    Draw
 Estimate: 2438 - 2538
 ```
 
+| Version | Estimate Elo | CCRL Blitz | CCRL Bullet | CEDR |
+|---------|--------------|------------|-------------|------|
+| 2.1     | 2488         | -          | -           | -    |
+
 ## Features
 ### Search:
 - Budget Aspiration window ```v2.4``` ```16.6 +/- 9.6```
