@@ -38,6 +38,7 @@ Estimate: 2438 - 2538
 - Reverse Futility Pruning
 - Futility Pruning
 - Quiescence Search Standing Pat Pruning
+- Quiescence Search Delta Pruning ```v2.5``` ```11.7 +/- 7.7```
 
 ### Reductions:
 - Internal Iterative Reduction
