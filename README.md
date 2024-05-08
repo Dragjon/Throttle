@@ -20,10 +20,10 @@ Rank Name                          Elo     +/-   Games   Score    Draw
 Estimate: 2447 - 2521
 ```
 
-| Version | Estimate Elo | CCRL Blitz | CCRL Bullet | CEDR |
-|---------|--------------|------------|-------------|------|
-| 2.1     | 2488         | -          | -           | -    |
-| 2.5     | 2484         | -          | -           | -    |
+| Version | Estimate CCRL Elo | CCRL Blitz | CCRL Bullet | CEDR |
+|---------|-------------------|------------|-------------|------|
+| 2.1     | 2446              | -          | -           | -    |
+| 2.5     | 2484              | -          | -           | -    |
 
 ## Features
 ### Search:
