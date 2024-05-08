@@ -7,22 +7,23 @@ Throttle is a UCI chess engine developed using Sebastian Lague's chess framework
 
 ## Rating
 ```
-Testing for v2.1
+Testing for v2.5
 Rank Name                          Elo     +/-   Games   Score    Draw
-   1 polaris1.4.1popcnt            338     199      36   87.5%    8.3%
-   2 throttlev2.1                  244     146      38   80.3%    7.9%
-   3 grekov6.25                    143     127      36   69.4%    5.6%
-   4 madchess                      -19     114      36   47.2%    5.6%
-   5 shallowblue                  -114     123      38   34.2%    0.0%
-   6 infrared                     -218     146      36   22.2%    5.6%
-   7 winterv0.1.1                 -417     nan      36    8.3%    0.0%
+   1 polaris1.4.1popcnt            475     108     180   93.9%    3.3%
+   2 throttlev2.5                  290      68     180   84.2%    5.0%
+   3 tantabusv1.0.2                129      53     180   67.8%    4.4%
+   4 madchess                      -41      51     180   44.2%    0.6%
+   5 shallowblue                   -83      52     180   38.3%    2.2%
+   6 infrared                     -223      61     180   21.7%    3.3%
+   7 winterv0.1.1                 -inf     nan     180    0.0%    0.0%
 
-Estimate: 2438 - 2538
+Estimate: 2447 - 2521
 ```
 
 | Version | Estimate Elo | CCRL Blitz | CCRL Bullet | CEDR |
 |---------|--------------|------------|-------------|------|
 | 2.1     | 2488         | -          | -           | -    |
+| 2.5     | 2484         | -          | -           | -    |
 
 ## Features
 ### Search:
