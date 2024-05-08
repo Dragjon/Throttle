@@ -112,6 +112,7 @@ SPRT: llr 2.95 (100.2%), lbound -2.94, ubound 2.94 - H1 was accepted
 - and many other people in sebastian lague's chess programming server
 
 ## Engines I took inspiration from (in no particular order)
+- Stormphrax
 - Boychesser
 - Smol.cs
 - 200 token monstrosity
