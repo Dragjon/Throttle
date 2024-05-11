@@ -6,9 +6,6 @@
 [![Lichess blitz rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=blitz)](https://lichess.org/@/Tokenstealer/perf/blitz)
 [![Lichess bullet rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=bullet)](https://lichess.org/@/Tokenstealer/perf/bullet)
 
-## Version
-```2.5```
-
 ## Rating
 ```
 Testing for v2.5
