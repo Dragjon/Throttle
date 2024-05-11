@@ -3,26 +3,27 @@
 Throttle is a UCI chess engine developed using Sebastian Lague's chess framework.
 
 ## Version
-2.4
+```2.5```
 
 ## Rating
 ```
-Testing for v2.1
+Testing for v2.5
 Rank Name                          Elo     +/-   Games   Score    Draw
-   1 polaris1.4.1popcnt            338     199      36   87.5%    8.3%
-   2 throttlev2.1                  244     146      38   80.3%    7.9%
-   3 grekov6.25                    143     127      36   69.4%    5.6%
-   4 madchess                      -19     114      36   47.2%    5.6%
-   5 shallowblue                  -114     123      38   34.2%    0.0%
-   6 infrared                     -218     146      36   22.2%    5.6%
-   7 winterv0.1.1                 -417     nan      36    8.3%    0.0%
+   1 polaris1.4.1popcnt            475     108     180   93.9%    3.3%
+   2 throttlev2.5                  290      68     180   84.2%    5.0%
+   3 tantabusv1.0.2                129      53     180   67.8%    4.4%
+   4 madchess                      -41      51     180   44.2%    0.6%
+   5 shallowblue                   -83      52     180   38.3%    2.2%
+   6 infrared                     -223      61     180   21.7%    3.3%
+   7 winterv0.1.1                 -inf     nan     180    0.0%    0.0%
 
-Estimate: 2438 - 2538
+Estimate: 2447 - 2521
 ```
 
-| Version | Estimate Elo | CCRL Blitz | CCRL Bullet | CEDR |
-|---------|--------------|------------|-------------|------|
-| 2.1     | 2488         | -          | -           | -    |
+| Version | Estimate CCRL Elo | CCRL Blitz | CCRL Bullet | CEDR |
+|---------|-------------------|------------|-------------|------|
+| 2.1     | 2446              | -          | -           | -    |
+| 2.5     | 2484              | -          | -           | -    |
 
 ## Features
 ### Search:
@@ -38,6 +39,7 @@ Estimate: 2438 - 2538
 - Reverse Futility Pruning
 - Futility Pruning
 - Quiescence Search Standing Pat Pruning
+- Quiescence Search Delta Pruning ```v2.5``` ```11.7 +/- 7.7```
 
 ### Reductions:
 - Internal Iterative Reduction
@@ -92,6 +94,13 @@ Score of ASP vs Original: 1307 - 1139 - 1072  [0.524] 3518
 Elo difference: 16.6 +/- 9.6, LOS: 100.0 %, DrawRatio: 30.5 %
 SPRT: llr 2.96 (100.4%), lbound -2.94, ubound 2.94 - H1 was accepted
 
+v2.5 - Delta pruning
+Score of DeltaPrune vs Original: 2000 - 1817 - 1615  [0.517] 5432
+...      DeltaPrune playing White: 1252 - 668 - 796  [0.608] 2716
+...      DeltaPrune playing Black: 748 - 1149 - 819  [0.426] 2716
+...      White vs Black: 2401 - 1416 - 1615  [0.591] 5432
+Elo difference: 11.7 +/- 7.7, LOS: 99.8 %, DrawRatio: 29.7 %
+SPRT: llr 2.95 (100.2%), lbound -2.94, ubound 2.94 - H1 was accepted
 ```
 
 ## Special thanks to (in no particular order)
@@ -103,6 +112,7 @@ SPRT: llr 2.96 (100.4%), lbound -2.94, ubound 2.94 - H1 was accepted
 - and many other people in sebastian lague's chess programming server
 
 ## Engines I took inspiration from (in no particular order)
+- Stormphrax
 - Boychesser
 - Smol.cs
 - 200 token monstrosity
@@ -111,7 +121,7 @@ SPRT: llr 2.96 (100.4%), lbound -2.94, ubound 2.94 - H1 was accepted
 - King Gambot IV
 - Viridithas (wiki)
 
-## Resourced I found useful
+## Resources I found useful
 - https://minuskelvin.net/chesswiki/
 - https://www.chessprogramming.org/
 - https://github.com/cosmobobak/viridithas/blob/master/wiki.md
