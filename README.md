@@ -1,6 +1,6 @@
 # Throttle Chess Engine
-![Elo Estimate: 2484](https://img.shields.io/badge/Elo_Estimate-2484-blue)
 <img alt="Throttle is a UCI chess engine developed using Sebastian Lague's chess framework." src="https://github.com/Dragjon/Throttle/blob/main/images/throttle.png" width="300" height="300">
+![Elo Estimate: 2484](https://img.shields.io/badge/Elo_Estimate-2484-blue)
 
 ## Version
 ```2.5```
