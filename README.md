@@ -8,7 +8,7 @@
 
 ## Rating
 ```
-Testing for v2.5
+Testing for v2.6
 Rank Name                          Elo     +/-   Games   Score    Draw
    1 polaris1.4.1popcnt            475     108     180   93.9%    3.3%
    2 throttlev2.5                  290      68     180   84.2%    5.0%
@@ -102,6 +102,15 @@ Score of DeltaPrune vs Original: 2000 - 1817 - 1615  [0.517] 5432
 ...      White vs Black: 2401 - 1416 - 1615  [0.591] 5432
 Elo difference: 11.7 +/- 7.7, LOS: 99.8 %, DrawRatio: 29.7 %
 SPRT: llr 2.95 (100.2%), lbound -2.94, ubound 2.94 - H1 was accepted
+
+v2.6 - Correct ASP window search
+Score of ASP vs Original: 3391 - 3179 - 2721  [0.511] 9291
+...      ASP playing White: 2084 - 1259 - 1304  [0.589] 4647
+...      ASP playing Black: 1307 - 1920 - 1417  [0.434] 4644
+...      White vs Black: 4004 - 2566 - 2721  [0.577] 9291
+Elo difference: 7.9 +/- 5.9, LOS: 99.6 %, DrawRatio: 29.3 %
+SPRT: llr 2.95 (100.3%), lbound -2.94, ubound 2.94 - H1 was accepted
+
 ```
 
 ## Special thanks to (in no particular order)
