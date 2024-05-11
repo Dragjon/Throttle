@@ -27,7 +27,7 @@ namespace Chess_Challenge.Cli
 
         private void HandleUci()
         {
-            Console.WriteLine("id name Throttle V2.1");
+            Console.WriteLine("id name Throttle V2.6");
             Console.WriteLine("id author Chess123easy");
             Console.WriteLine();
             Console.WriteLine("uciok");

@@ -6,14 +6,14 @@ using static ChessChallenge.API.BitboardHelper;
 /*
 | Throttle - A c# UCI chess engine | SSS Version
   --------------------------------
-Version: 2.5
+Version: 2.6
 
 * Feature elo gain after 1.4
 ** Feature added at version after 1.4
 Features:
     
     Search:
-        - Budget aspiration window **2.4 *16.6 +/- 9.6
+        - Aspiration window **2.4 *16.6 +/- 9.6
         - Fail-Soft Negamax Search
         - Principle Variation Search
             - Triple PVS **1.5 *21.3 +/- 11.1,
@@ -83,6 +83,15 @@ Score of DeltaPrune vs Original: 2000 - 1817 - 1615  [0.517] 5432
 ...      White vs Black: 2401 - 1416 - 1615  [0.591] 5432
 Elo difference: 11.7 +/- 7.7, LOS: 99.8 %, DrawRatio: 29.7 %
 SPRT: llr 2.95 (100.2%), lbound -2.94, ubound 2.94 - H1 was accepted
+
+v2.6 - Correct ASP window search
+Score of ASP vs Original: 3391 - 3179 - 2721  [0.511] 9291
+...      ASP playing White: 2084 - 1259 - 1304  [0.589] 4647
+...      ASP playing Black: 1307 - 1920 - 1417  [0.434] 4644
+...      White vs Black: 4004 - 2566 - 2721  [0.577] 9291
+Elo difference: 7.9 +/- 5.9, LOS: 99.6 %, DrawRatio: 29.3 %
+SPRT: llr 2.95 (100.3%), lbound -2.94, ubound 2.94 - H1 was accepted
+
 */
 public class MyBot : IChessBot
 {
@@ -212,7 +221,6 @@ public class MyBot : IChessBot
             int phase = 0;
             int mg_score = 0;
             int eg_score = 0;
-            int turn = board.IsWhiteToMove ? 1 : -1;
             int piece_mobility;
 
             foreach (bool isWhite in new[] { !board.IsWhiteToMove, board.IsWhiteToMove })
@@ -325,16 +333,16 @@ public class MyBot : IChessBot
             }
 
             tt = (
-board.ZobristKey,
-alpha > oldAlpha // don't update best move if upper bound
-? bestMove.RawValue
-: ttMoveRaw,
-Math.Clamp(bestScore, -20000, 20000),
-0,
-bestScore >= beta
-? 2147483647 /* BOUND_LOWER */
-: alpha - oldAlpha /* BOUND_UPPER if alpha == oldAlpha else BOUND_EXACT */
-);
+            board.ZobristKey,
+                    alpha > oldAlpha // don't update best move if upper bound
+                    ? bestMove.RawValue
+                    : ttMoveRaw,
+                    Math.Clamp(bestScore, -20000, 20000),
+                    0,
+                    bestScore >= beta
+                    ? 2147483647 /* BOUND_LOWER */
+                    : alpha - oldAlpha /* BOUND_UPPER if alpha == oldAlpha else BOUND_EXACT */
+            );
 
             return lastScore = bestScore;
         }
@@ -479,22 +487,22 @@ bestScore >= beta
 
 
                 // Extended futility pruning
-                if (nonPv && depth <= 4 && !move.IsCapture && (eval + futilityMargin * depth < alpha))
+                if (nonPv && depth <= 4 && !move.IsCapture && (eval + futilityMargin * depth < alpha) && bestScore > mateScore + 100)
                     break;
 
             }
 
             tt = (
-    board.ZobristKey,
-    alpha > oldAlpha // don't update best move if upper bound
-        ? bestMove.RawValue
-        : ttMoveRaw,
-    Math.Clamp(bestScore, -20000, 20000),
-    depth,
-    bestScore >= beta
-        ? 2147483647 /* BOUND_LOWER */
-        : alpha - oldAlpha /* BOUND_UPPER if alpha == oldAlpha else BOUND_EXACT */
-        );
+                    board.ZobristKey,
+                    alpha > oldAlpha // don't update best move if upper bound
+                    ? bestMove.RawValue
+                    : ttMoveRaw,
+                    Math.Clamp(bestScore, -20000, 20000),
+                    depth,
+                    bestScore >= beta
+                    ? 2147483647 /* BOUND_LOWER */
+                    : alpha - oldAlpha /* BOUND_UPPER if alpha == oldAlpha else BOUND_EXACT */
+            );
 
             return lastScore = bestScore;
         }
@@ -503,16 +511,54 @@ bestScore >= beta
         {
             nodes = 0;
 
+            int score = 0;
+
             // Soft time limit
             for (; timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / softBoundTimeRatio; ++globalDepth)
             {
                 int alpha = -infinity;
-                int beta = -alpha;
-                int score;
+                int beta = infinity;
+
+                int delta = 0;
+
+                if (globalDepth > 3)
+                {
+                    delta = 20;
+                    alpha = score - delta;
+                    beta = score + delta;
+                }
+
                 killers = new Move[4096];
 
-                if (Math.Abs(lastScore - (score = search(globalDepth, 0, lastScore - 41, lastScore + 41))) >= 41)
-                    score = search(globalDepth, 0, alpha, beta);
+                int newScore;
+
+                while (true)
+                {
+                    newScore = search(globalDepth, 0, alpha, beta);
+
+                    if (newScore <= alpha)
+                    {
+                        beta = (newScore + beta) / 2;
+                        alpha = Math.Max(newScore - delta, -infinity);
+
+                        Console.WriteLine($"info depth {globalDepth} time {timer.MillisecondsElapsedThisTurn} nodes {nodes} nps {Convert.ToInt32(1000 * nodes / ((ulong)timer.MillisecondsElapsedThisTurn + 0.001))} score cp {alpha} upperbound pv {ChessChallenge.Chess.MoveUtility.GetMoveNameUCI(new(rootBestMove.RawValue))}");
+                    }
+                    else if (newScore >= beta)
+                    {
+                        beta = Math.Min(newScore + delta, infinity);
+
+                        Console.WriteLine($"info depth {globalDepth} time {timer.MillisecondsElapsedThisTurn} nodes {nodes} nps {Convert.ToInt32(1000 * nodes / ((ulong)timer.MillisecondsElapsedThisTurn + 0.001))} score cp {beta} lowerbound pv {ChessChallenge.Chess.MoveUtility.GetMoveNameUCI(new(rootBestMove.RawValue))}");
+                    }
+                    else
+                        break;
+
+                    if (delta <= 500)
+                        delta += delta;
+                    else
+                        delta = infinity;
+                }
+
+                score = newScore;
 
                 Console.WriteLine($"info depth {globalDepth} time {timer.MillisecondsElapsedThisTurn} nodes {nodes} nps {Convert.ToInt32(1000 * nodes / ((ulong)timer.MillisecondsElapsedThisTurn + 0.001))} score cp {score} pv {ChessChallenge.Chess.MoveUtility.GetMoveNameUCI(new(rootBestMove.RawValue))}");
             }
