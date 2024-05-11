@@ -2,9 +2,9 @@
 <img alt="Throttle is a UCI chess engine developed using Sebastian Lague's chess framework." src="https://github.com/Dragjon/Throttle/blob/main/images/throttle.png" width="300" height="300"></img><br><br>
 ![](https://img.shields.io/badge/Version-2.5-green)
 ![CCRL Elo Estimate: 2484](https://img.shields.io/badge/Elo_Estimate-2484-orange)
-[![Lichess rapid rating](https://lichess-shield.vercel.app/api?username=Ofish&format=rapid)](https://lichess.org/@/Ofish/perf/rapid)
-[![Lichess blitz rating](https://lichess-shield.vercel.app/api?username=Ofish&format=blitz)](https://lichess.org/@/Ofish/perf/blitz)
-[![Lichess bullet rating](https://lichess-shield.vercel.app/api?username=Ofish&format=bullet)](https://lichess.org/@/Ofish/perf/bullet)
+[![Lichess rapid rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=rapid)](https://lichess.org/@/Tokenstealer/perf/rapid)
+[![Lichess blitz rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=blitz)](https://lichess.org/@/Tokenstealer/perf/blitz)
+[![Lichess bullet rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=bullet)](https://lichess.org/@/Tokenstealer/perf/bullet)
 
 ## Version
 ```2.5```
