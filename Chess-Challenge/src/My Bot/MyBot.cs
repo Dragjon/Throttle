@@ -6,7 +6,7 @@ using static ChessChallenge.API.BitboardHelper;
 /*
 | Throttle - A c# UCI chess engine | SSS Version
   --------------------------------
-Version: 2.7
+Version: 2.8
 
 * Feature elo gain after 1.4
 ** Feature added at version after 1.4
@@ -95,6 +95,14 @@ SPRT: llr 2.95 (100.3%), lbound -2.94, ubound 2.94 - H1 was accepted
 v2.7 - Tuned eval + changed mobility
 (BLUESCREENED)
 Around 7 elo
+
+v2.8 - Speed up evaluation - extract only at the end
+Score of SpeedUp vs Original: 902 - 733 - 544  [0.539] 2179
+...      SpeedUp playing White: 538 - 284 - 268  [0.617] 1090
+...      SpeedUp playing Black: 364 - 449 - 276  [0.461] 1089
+...      White vs Black: 987 - 648 - 544  [0.578] 2179
+Elo difference: 27.0 +/- 12.6, LOS: 100.0 %, DrawRatio: 25.0 %
+SPRT: llr 2.95 (100.1%), lbound -2.94, ubound 2.94 - H1 was accepted
 */
 public class MyBot : IChessBot
 {
@@ -219,14 +227,12 @@ public class MyBot : IChessBot
         int Eval()
         {
             int phase = 0;
-            int mg_score = 0;
-            int eg_score = 0;
+            int score = 0;
             int piece_mobility;
 
             foreach (bool isWhite in new[] { !board.IsWhiteToMove, board.IsWhiteToMove })
             {
-                mg_score = -mg_score;
-                eg_score = -eg_score;
+                score = -score;
 
                 //       None (skipped)               King
                 for (var pieceIndex = 0; ++pieceIndex <= 6;)
@@ -242,8 +248,7 @@ public class MyBot : IChessBot
 
                         if (pieceIndex == 3 && bitboard != 0)
                         {
-                            mg_score += unpack_mg(bishopPair);
-                            eg_score += unpack_eg(bishopPair);
+                            score += bishopPair;
                         }
 
                         piece_mobility = GetNumberOfSetBits(GetPieceAttacks((PieceType)pieceIndex, new Square(sq), board, isWhite));
@@ -251,8 +256,7 @@ public class MyBot : IChessBot
                         if (isWhite) sq ^= 56;
                         phase += game_phase_inc[pieceIndex - 1];
 
-                        mg_score += unpack_mg(pst[pieceIndex - 1, sq]) + unpack_mg(piece_values[pieceIndex - 1]) + piece_mobility * unpack_mg(mobility_weights[pieceIndex - 1]); // PST + Material
-                        eg_score += unpack_eg(pst[pieceIndex - 1, sq]) + unpack_eg(piece_values[pieceIndex - 1]) + piece_mobility * unpack_eg(mobility_weights[pieceIndex - 1]);
+                        score += pst[pieceIndex - 1, sq] + piece_values[pieceIndex - 1] + piece_mobility * mobility_weights[pieceIndex - 1]; // PST + Material
                     }
                 }
             }
@@ -262,11 +266,12 @@ public class MyBot : IChessBot
                 phase = 24;
             int eg_phase = 24 - phase;
 
+            int mg_score = unpack_mg(score);
+            int eg_score = unpack_eg(score);
 
             return tempo + ((mg_score * phase) + (eg_score * eg_phase)) / 24;
 
         }
-
 
         // Quiescence Search
         int qSearch(int alpha, int beta)
@@ -276,8 +281,6 @@ public class MyBot : IChessBot
 
             int standPat = Eval();
 
-            // Key to index TT
-            int key = (int)(board.ZobristKey % 16777216);
             int bestScore = standPat;
 
             // Terminal nodes
@@ -397,9 +400,6 @@ public class MyBot : IChessBot
 
             // Static eval needed for RFP and NMP
             int eval = Eval();
-
-            // Key to index TT
-            int key = (int)(board.ZobristKey & 16777215);
 
             // Index for killers
             int killerIndex = ply & 4095;
