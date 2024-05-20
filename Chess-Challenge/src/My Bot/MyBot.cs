@@ -6,7 +6,7 @@ using static ChessChallenge.API.BitboardHelper;
 /*
 | Throttle - A c# UCI chess engine | SSS Version
   --------------------------------
-Version: 2.9
+Version: 3.0
 
 * Feature elo gain after 1.4
 ** Feature added at version after 1.4
@@ -110,6 +110,14 @@ v2.9 - RFP changed to 55;
 ...      White vs Black: 6312 - 4106 - 3362  [0.580] 13780
 Elo difference: 6.4 +/- 5.0, LOS: 99.4 %, DrawRatio: 24.4 %
 SPRT: llr 2.95 (100.1%), lbound -2.94, ubound 2.94 - H1 was accepted
+
+v3.0 - New futility pruning
+Score of NewFP vs Original: 1646 - 1461 - 1002  [0.523] 4109
+...      NewFP playing White: 953 - 603 - 499  [0.585] 2055
+...      NewFP playing Black: 693 - 858 - 503  [0.460] 2054
+...      White vs Black: 1811 - 1296 - 1002  [0.563] 4109
+Elo difference: 15.7 +/- 9.2, LOS: 100.0 %, DrawRatio: 24.4 %
+SPRT: llr 2.96 (100.5%), lbound -2.94, ubound 2.94 - H1 was accepted
 */
 public class MyBot : IChessBot
 {
@@ -211,7 +219,7 @@ public class MyBot : IChessBot
 
     // Variables for search
     int rfpMargin = 55;
-    int futilityMargin = 337;
+    int futilityMargin = 116;
     int mateScore = -20000;
     int infinity = 30000;
     int hardBoundTimeRatio = 10;
@@ -441,9 +449,6 @@ public class MyBot : IChessBot
 
                 int reduction = moveCount > 3 && nonPv && !move.IsCapture ? 1 : 0;
 
-                if (nonPv && depth <= 4 && !move.IsCapture && (eval + futilityMargin * depth < alpha))
-                    reduction++;
-
                 board.MakeMove(move);
 
                 // Check extension
@@ -501,7 +506,7 @@ public class MyBot : IChessBot
 
 
                 // Extended futility pruning
-                if (nonPv && depth <= 4 && !move.IsCapture && (eval + futilityMargin * depth < alpha) && bestScore > mateScore + 100)
+                if (nonPv && depth <= 4 && !move.IsCapture && (eval + futilityMargin * depth * depth < alpha) && bestScore > mateScore + 100)
                     break;
 
             }
@@ -538,7 +543,7 @@ public class MyBot : IChessBot
 
                 if (globalDepth > 3)
                 {
-                    delta = 20;
+                    delta = 10;
                     alpha = score - delta;
                     beta = score + delta;
                 }
