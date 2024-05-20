@@ -1,6 +1,6 @@
 # Throttle Chess Engine
 <img alt="Throttle is a UCI chess engine developed using Sebastian Lague's chess framework." src="https://github.com/Dragjon/Throttle/blob/main/images/throttle.png" width="300" height="300"></img><br><br>
-![](https://img.shields.io/badge/Version-2.8-green)
+![](https://img.shields.io/badge/Version-2.9-green)
 ![](https://img.shields.io/badge/CCRL_Elo_Estimate-2484-orange)
 [![Lichess rapid rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=rapid)](https://lichess.org/@/Tokenstealer/perf/rapid)
 [![Lichess blitz rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=blitz)](https://lichess.org/@/Tokenstealer/perf/blitz)
@@ -123,6 +123,13 @@ Score of SpeedUp vs Original: 902 - 733 - 544  [0.539] 2179
 Elo difference: 27.0 +/- 12.6, LOS: 100.0 %, DrawRatio: 25.0 %
 SPRT: llr 2.95 (100.1%), lbound -2.94, ubound 2.94 - H1 was accepted
 
+v2.9 - RFP changed to 55;
+...      RFP55 playing White: 3188 - 1958 - 1745  [0.589] 6891
+...      RFP55 playing Black: 2148 - 3124 - 1617  [0.429] 6889
+...      White vs Black: 6312 - 4106 - 3362  [0.580] 13780
+Elo difference: 6.4 +/- 5.0, LOS: 99.4 %, DrawRatio: 24.4 %
+SPRT: llr 2.95 (100.1%), lbound -2.94, ubound 2.94 - H1 was accepted
+
 ```
 
 ## Special thanks to (in no particular order)
@@ -130,8 +137,9 @@ SPRT: llr 2.95 (100.1%), lbound -2.94, ubound 2.94 - H1 was accepted
 - cj5716 (For helping with a lot of engine-related stuff)
 - arandomnoob (For helping with a lot of engine-related stuff)
 - Toanth (For hosting the 400 token challenge to really get me into chess programming)
+- Gediminas - for texel-tuner
 - jw (nnue stuff and bullet)
-- and many other people in sebastian lague's chess programming server
+- and many other people in sebastian lague's chess programming server / the engine programming server
 
 ## Engines I took inspiration from (in no particular order)
 - Stormphrax
