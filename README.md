@@ -137,8 +137,9 @@ SPRT: llr 2.95 (100.1%), lbound -2.94, ubound 2.94 - H1 was accepted
 - cj5716 (For helping with a lot of engine-related stuff)
 - arandomnoob (For helping with a lot of engine-related stuff)
 - Toanth (For hosting the 400 token challenge to really get me into chess programming)
+- Gediminas - for texel-tuner
 - jw (nnue stuff and bullet)
-- and many other people in sebastian lague's chess programming server
+- and many other people in sebastian lague's chess programming server / the engine programming server
 
 ## Engines I took inspiration from (in no particular order)
 - Stormphrax
