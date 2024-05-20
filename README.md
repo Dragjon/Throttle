@@ -123,6 +123,13 @@ Score of SpeedUp vs Original: 902 - 733 - 544  [0.539] 2179
 Elo difference: 27.0 +/- 12.6, LOS: 100.0 %, DrawRatio: 25.0 %
 SPRT: llr 2.95 (100.1%), lbound -2.94, ubound 2.94 - H1 was accepted
 
+v2.9 - RFP changed to 55;
+...      RFP55 playing White: 3188 - 1958 - 1745  [0.589] 6891
+...      RFP55 playing Black: 2148 - 3124 - 1617  [0.429] 6889
+...      White vs Black: 6312 - 4106 - 3362  [0.580] 13780
+Elo difference: 6.4 +/- 5.0, LOS: 99.4 %, DrawRatio: 24.4 %
+SPRT: llr 2.95 (100.1%), lbound -2.94, ubound 2.94 - H1 was accepted
+
 ```
 
 ## Special thanks to (in no particular order)
