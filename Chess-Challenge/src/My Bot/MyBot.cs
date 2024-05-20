@@ -6,7 +6,7 @@ using static ChessChallenge.API.BitboardHelper;
 /*
 | Throttle - A c# UCI chess engine | SSS Version
   --------------------------------
-Version: 2.8
+Version: 2.9
 
 * Feature elo gain after 1.4
 ** Feature added at version after 1.4
@@ -102,6 +102,13 @@ Score of SpeedUp vs Original: 902 - 733 - 544  [0.539] 2179
 ...      SpeedUp playing Black: 364 - 449 - 276  [0.461] 1089
 ...      White vs Black: 987 - 648 - 544  [0.578] 2179
 Elo difference: 27.0 +/- 12.6, LOS: 100.0 %, DrawRatio: 25.0 %
+SPRT: llr 2.95 (100.1%), lbound -2.94, ubound 2.94 - H1 was accepted
+
+v2.9 - RFP changed to 55;
+...      RFP55 playing White: 3188 - 1958 - 1745  [0.589] 6891
+...      RFP55 playing Black: 2148 - 3124 - 1617  [0.429] 6889
+...      White vs Black: 6312 - 4106 - 3362  [0.580] 13780
+Elo difference: 6.4 +/- 5.0, LOS: 99.4 %, DrawRatio: 24.4 %
 SPRT: llr 2.95 (100.1%), lbound -2.94, ubound 2.94 - H1 was accepted
 */
 public class MyBot : IChessBot
@@ -203,7 +210,7 @@ public class MyBot : IChessBot
     )[] transpositionTable = new (ulong, ushort, int, int, int)[0x800000];
 
     // Variables for search
-    int rfpMargin = 65;
+    int rfpMargin = 55;
     int futilityMargin = 337;
     int mateScore = -20000;
     int infinity = 30000;
