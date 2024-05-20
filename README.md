@@ -1,6 +1,6 @@
 # Throttle Chess Engine
 <img alt="Throttle is a UCI chess engine developed using Sebastian Lague's chess framework." src="https://github.com/Dragjon/Throttle/blob/main/images/throttle.png" width="300" height="300"></img><br><br>
-![](https://img.shields.io/badge/Version-2.7-green)
+![](https://img.shields.io/badge/Version-2.8-green)
 ![](https://img.shields.io/badge/CCRL_Elo_Estimate-2484-orange)
 [![Lichess rapid rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=rapid)](https://lichess.org/@/Tokenstealer/perf/rapid)
 [![Lichess blitz rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=blitz)](https://lichess.org/@/Tokenstealer/perf/blitz)
@@ -110,6 +110,18 @@ Score of ASP vs Original: 3391 - 3179 - 2721  [0.511] 9291
 ...      White vs Black: 4004 - 2566 - 2721  [0.577] 9291
 Elo difference: 7.9 +/- 5.9, LOS: 99.6 %, DrawRatio: 29.3 %
 SPRT: llr 2.95 (100.3%), lbound -2.94, ubound 2.94 - H1 was accepted
+
+v2.7 - Tuned eval + changed mobility
+(BLUESCREENED)
+Around 7 elo
+
+v2.8 - Speed up evaluation - extract only at the end
+Score of SpeedUp vs Original: 902 - 733 - 544  [0.539] 2179
+...      SpeedUp playing White: 538 - 284 - 268  [0.617] 1090
+...      SpeedUp playing Black: 364 - 449 - 276  [0.461] 1089
+...      White vs Black: 987 - 648 - 544  [0.578] 2179
+Elo difference: 27.0 +/- 12.6, LOS: 100.0 %, DrawRatio: 25.0 %
+SPRT: llr 2.95 (100.1%), lbound -2.94, ubound 2.94 - H1 was accepted
 
 ```
 
