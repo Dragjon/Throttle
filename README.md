@@ -23,8 +23,8 @@ Estimate: 2447 - 2521
 
 | Version | Estimate CCRL Elo | CCRL Blitz | CCRL Bullet | CEDR |
 |---------|-------------------|------------|-------------|------|
-| 2.1     | 2446              | -          | -           | -    |
 | 2.5     | 2484              | -          | -           | -    |
+| 2.1     | 2446              | -          | -           | -    |
 
 ## Features
 ### Search:
