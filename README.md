@@ -136,20 +136,20 @@ SPRT: llr 2.96 (100.5%), lbound -2.94, ubound 2.94 - H1 was accepted
 - and many other people in sebastian lague's chess programming server / the engine programming server
 
 ## Engines I took inspiration from (in no particular order)
-- Stormphrax
-- Boychesser
-- Smol.cs
-- 200 token monstrosity
-- NOSPRT
-- Atadofanoobbot
-- King Gambot IV
-- Viridithas (wiki)
+- [Stormphrax](https://github.com/Ciekce/Stormphrax)
+- [Boychesser](https://github.com/analog-hors/Boychesser/)
+- [Smol.cs / NOSPRT](https://github.com/cj5716/smol.cs)
+- [200 token monstrosity](https://gist.github.com/mcthouacbb/2e87229fc971cd30762d6b481bdaac0b)
+- [Atadofanoobbot](https://github.com/mcthouacbb/Chess-Challenge-400/blob/400tokens/Chess-Challenge/src/My%20Bot/AtadOfANoobBot.cs)
+- [King Gambot IV](https://github.com/toanth/Chess-Challenge/blob/master/Chess-Challenge/src/My%20Bot/MyBot.cs)
+- [Viridithas](https://github.com/cosmobobak/viridithas/)
 
 ## Resources I found useful
-- https://minuskelvin.net/chesswiki/
-- https://www.chessprogramming.org/
-- https://github.com/cosmobobak/viridithas/blob/master/wiki.md
-- https://discord.gg/S3MMh67q
+- https://minuskelvin.net/chesswiki/ (Updated Chess programming wiki)
+- https://www.chessprogramming.org/ (Old Wiki)
+- https://github.com/cosmobobak/viridithas/blob/master/wiki.md (Small repository of search optims)
+- https://discord.gg/S3MMh67q (Sebastian Lagues's chess programming serever)
+- https://discord.gg/dVgkdqqt (Engine programming server)
 
 ## TODO
 - Make it stronger 
