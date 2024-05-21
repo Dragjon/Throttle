@@ -130,6 +130,13 @@ v2.9 - RFP changed to 55;
 Elo difference: 6.4 +/- 5.0, LOS: 99.4 %, DrawRatio: 24.4 %
 SPRT: llr 2.95 (100.1%), lbound -2.94, ubound 2.94 - H1 was accepted
 
+v3.0 - New futility pruning
+Score of NewFP vs Original: 1646 - 1461 - 1002  [0.523] 4109
+...      NewFP playing White: 953 - 603 - 499  [0.585] 2055
+...      NewFP playing Black: 693 - 858 - 503  [0.460] 2054
+...      White vs Black: 1811 - 1296 - 1002  [0.563] 4109
+Elo difference: 15.7 +/- 9.2, LOS: 100.0 %, DrawRatio: 24.4 %
+SPRT: llr 2.96 (100.5%), lbound -2.94, ubound 2.94 - H1 was accepted
 ```
 
 ## Special thanks to (in no particular order)
