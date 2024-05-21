@@ -19,37 +19,39 @@ You can either download my latest version in [releases](https://github.com/Dragj
 ## Features
 ### Search:
 - Budget Aspiration window ```v2.4``` ```16.6 +/- 9.6```
-- Fail-Soft Negamax Search
-- Principle Variation Search
+- <a href="https://www.chessprogramming.org/Negamax"> Fail-Soft Negamax Search </a>
+- <a href="https://www.chessprogramming.org/Quiescence_Search"> Quiescence Search </a>
+- <a href="https://www.chessprogramming.org/Principal_Variation_Search"> Principle Variation Search </a>
 - Triple PVS ```v1.5``` ```21.3 +/- 11.1```
 
 ### Pruning:
-- Actual TT pruning ```v2.1``` ```136.4 +/- 31.2```
-- A/B Pruning
-- Null Move Pruning
-- Reverse Futility Pruning
-- Futility Pruning (square) ```v3.0``` ```15.7 +/- 9.2 vs Normal futility pruning```
+- <a href="https://www.chessprogramming.org/Transposition_Table">Actual TT pruning</a> ```v2.1``` ```136.4 +/- 31.2```
+- <a href="https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning">A/B Pruning</a>
+- <a href="https://www.chessprogramming.org/Null_Move_Pruning">Null Move Pruning</a>
+- <a href="https://www.chessprogramming.org/Reverse_Futility_Pruning">Reverse Futility Pruning</a>
+- <a href="https://www.chessprogramming.org/Futility_Pruning">Futility Pruning (square)</a> ```v3.0``` ```15.7 +/- 9.2 vs Normal futility pruning```
 - Quiescence Search Standing Pat Pruning
-- Quiescence Search Delta Pruning ```v2.5``` ```11.7 +/- 7.7```
+- <a href="https://www.chessprogramming.org/Delta_Pruning">Quiescence Search Delta Pruning</a> ```v2.5``` ```11.7 +/- 7.7```
 
 ### Reductions:
 - Internal Iterative Reduction
-- Late move reductions with triple pvs
+- <a href="https://www.chessprogramming.org/Late_Move_Reductions">Late move reductions with triple pvs</a>
 
 ### Extensions:
-- Check Extensions
+- <a href="https://www.chessprogramming.org/Check_Extensions">Check Extensions</a>
 
 ### Ordering:
 - TT Moves
-- MVV-LVA (for good captures)
-- Killer moves (quiets)
-- History moves (quiets) ```v2.0``` ```67.9 +/- 20.9```
+- <a href="https://www.chessprogramming.org/MVV-LVA">MVV-LVA (for good captures)</a>
+- <a href="https://www.chessprogramming.org/Killer_Move">Killer moves (quiets)</a>
+- <a href="https://www.chessprogramming.org/History_Heuristic">History moves (quiets)</a> ```v2.0``` ```67.9 +/- 20.9```
 
 ### Time Management:
 - Hard and Soft Time Management
 
 ### Evaluation:
-- SWAR compression ```v2.2``` ``` 5.7 +/- 4.6```
+- Tuned with Gedimas' [Texel Tuner](https://github.com/GediminasMasaitis/texel-tuner)
+- <a href="https://minuskelvin.net/chesswiki/content/packed-eval.html">SWAR compression</a> ```v2.2``` ``` 5.7 +/- 4.6```
 - Material values (PeSTO)
 - Piece square tables (PeSTO)
 - Tapered Eval
