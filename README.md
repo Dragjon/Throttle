@@ -1,5 +1,5 @@
 # Throttle Chess Engine
-<img alt="Throttle is a UCI chess engine developed using Sebastian Lague's chess framework." src="https://github.com/Dragjon/Throttle/blob/main/images/throttle.png" width="300" height="300"></img><br><br>
+<img alt="Throttle is a UCI chess engine developed using Sebastian Lague's chess framework (https://github.com/SebLague/Chess-Challenge)." src="https://github.com/Dragjon/Throttle/blob/main/images/throttle.png" width="300" height="300"></img><br><br>
 ![](https://img.shields.io/badge/Version-3.0-green)
 ![](https://img.shields.io/badge/CCRL_Elo_Estimate-2484-orange)
 [![Lichess rapid rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=rapid)](https://lichess.org/@/Tokenstealer/perf/rapid)
@@ -10,7 +10,7 @@
 | Version | Estimate CCRL Elo | CCRL Blitz         | CCRL Bullet         | CEDR         |
 |---------|-------------------|--------------------|---------------------|--------------|
 | 3.0     | 2376.3 +/- 62.0   | -                  | -                   | -            |
-* Estimated Elo is calculated against Stash 14.0 (sorry stash!)
+* Estimated Elo is calculated against <a href="https://gitlab.com/mhouppin/stash-bot">Stash 14.0</a> (sorry stash!)
 
 ## Features
 ### Search:
