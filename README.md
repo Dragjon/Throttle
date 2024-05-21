@@ -10,7 +10,7 @@ Throttle is a UCI chess engine developed using [Sebastian Lague's chess framewor
 ## Playing
 You can either download my latest version in [releases](https://github.com/Dragjon/Throttle/releases) or play with me online at [lichess](https://lichess.org/@/TokenStealer) but note I may not always be online. If you choose to download me, also note that I am a UCI chess engine and I don't come with my own graphical interface. I would recommend you to use a GUI to test my engine if you are not familiar with the [UCI protocol](https://www.wbec-ridderkerk.nl/html/UCIProtocol.html) such as [Arena Chess GUI](http://www.playwitharena.de/) or [Banksia Chess GUI](https://banksiagui.com/).
 
-## Rating
+## Rating (Playing strength)
 | Version | Estimate CCRL Elo | CCRL Blitz         | CCRL Bullet         | CEDR         |
 |---------|-------------------|--------------------|---------------------|--------------|
 | 3.0     | 2376.3 +/- 62.0   | -                  | -                   | -            |
