@@ -144,6 +144,7 @@ SPRT: llr 2.96 (100.5%), lbound -2.94, ubound 2.94 - H1 was accepted
 - [Atadofanoobbot](https://github.com/mcthouacbb/Chess-Challenge-400/blob/400tokens/Chess-Challenge/src/My%20Bot/AtadOfANoobBot.cs)
 - [King Gambot IV](https://github.com/toanth/Chess-Challenge/blob/master/Chess-Challenge/src/My%20Bot/MyBot.cs)
 - [Viridithas](https://github.com/cosmobobak/viridithas/)
+- [Ethereal](https://github.com/AndyGrant/Ethereal)
 
 ## Resources I found useful
 - https://minuskelvin.net/chesswiki/ (Updated Chess programming wiki)
