@@ -7,24 +7,10 @@
 [![Lichess bullet rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=bullet)](https://lichess.org/@/Tokenstealer/perf/bullet)
 
 ## Rating
-```
-Testing for v2.5
-Rank Name                          Elo     +/-   Games   Score    Draw
-   1 polaris1.4.1popcnt            475     108     180   93.9%    3.3%
-   2 throttlev2.5                  290      68     180   84.2%    5.0%
-   3 tantabusv1.0.2                129      53     180   67.8%    4.4%
-   4 madchess                      -41      51     180   44.2%    0.6%
-   5 shallowblue                   -83      52     180   38.3%    2.2%
-   6 infrared                     -223      61     180   21.7%    3.3%
-   7 winterv0.1.1                 -inf     nan     180    0.0%    0.0%
-
-Estimate: 2447 - 2521
-```
-
+* Estimated Elo is calculated against Stash 14.0 (sorry stash!)
 | Version | Estimate CCRL Elo | CCRL Blitz | CCRL Bullet | CEDR |
 |---------|-------------------|------------|-------------|------|
-| 2.5     | 2484              | -          | -           | -    |
-| 2.1     | 2446              | -          | -           | -    |
+| 3.0     | 2376.3 +/- 62.0   | -          | -           | -    |
 
 ## Features
 ### Search:
