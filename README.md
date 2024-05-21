@@ -7,6 +7,9 @@ Throttle is a UCI chess engine developed using [Sebastian Lague's chess framewor
 [![Lichess blitz rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=blitz)](https://lichess.org/@/Tokenstealer/perf/blitz)
 [![Lichess bullet rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=bullet)](https://lichess.org/@/Tokenstealer/perf/bullet)
 
+## Playing
+You can either download my latest version in [releases](https://github.com/Dragjon/Throttle/releases) or play with me online at [lichess](https://lichess.org/@/TokenStealer) but note I may not always be online. If you choose to download me, also note that Throttle is a UCI chess engine and doesn't come with its own graphical interface. I would recommend you to use a GUI to test my engine if you are not familiar with the [UCI protocol](https://www.wbec-ridderkerk.nl/html/UCIProtocol.html) such as [Arena Chess GUI](http://www.playwitharena.de/) or [Banksia Chess GUI](https://banksiagui.com/).
+
 ## Rating
 | Version | Estimate CCRL Elo | CCRL Blitz         | CCRL Bullet         | CEDR         |
 |---------|-------------------|--------------------|---------------------|--------------|
