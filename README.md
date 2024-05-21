@@ -38,7 +38,7 @@ Estimate: 2447 - 2521
 - A/B Pruning
 - Null Move Pruning
 - Reverse Futility Pruning
-- Futility Pruning (square) ```v3.0``` ```15.7 +/- 9.2```
+- Futility Pruning (square) ```v3.0``` ```15.7 +/- 9.2 vs Normal futility pruning```
 - Quiescence Search Standing Pat Pruning
 - Quiescence Search Delta Pruning ```v2.5``` ```11.7 +/- 7.7```
 
