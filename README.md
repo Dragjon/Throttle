@@ -7,10 +7,10 @@
 [![Lichess bullet rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=bullet)](https://lichess.org/@/Tokenstealer/perf/bullet)
 
 ## Rating
-* Estimated Elo is calculated against Stash 14.0 (sorry stash!)
 | Version | Estimate CCRL Elo | CCRL Blitz | CCRL Bullet | CEDR |
 |---------|-------------------|------------|-------------|------|
 | 3.0     | 2376.3 +/- 62.0   | -          | -           | -    |
+* Estimated Elo is calculated against Stash 14.0 (sorry stash!)
 
 ## Features
 ### Search:
