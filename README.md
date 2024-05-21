@@ -127,12 +127,13 @@ SPRT: llr 2.96 (100.5%), lbound -2.94, ubound 2.94 - H1 was accepted
 ```
 
 ## Special thanks to (in no particular order)
-- Ciekce (For helping with a lot of engine-related stuff)
-- cj5716 (For helping with a lot of engine-related stuff)
-- arandomnoob (For helping with a lot of engine-related stuff)
-- Toanth (For hosting the 400 token challenge to really get me into chess programming)
-- Gediminas - for texel-tuner
-- jw (nnue stuff and bullet)
+- [Sebastian Lague](https://github.com/SebLague/) (For hosting the tiny chess bot tournament, although I couldn't submit on time)
+- [Ciekce](https://github.com/Ciekce) (For helping with a lot of engine-related stuff)
+- [cj5716](https://github.com/cj5716) (For helping with a lot of engine-related stuff)
+- [arandomnoob(on discord)](https://github.com/mcthouacbb) (For helping with a lot of engine-related stuff)
+- [Toanth](https://github.com/toanth/) (For hosting the 400 token challenge to really get me into chess programming)
+- [Gediminas](https://github.com/GediminasMasaitis/) - for texel-tuner and stuff related to tuning
+- [jw](https://github.com/jw1912) (nnue stuff and bullet)
 - and many other people in sebastian lague's chess programming server / the engine programming server
 
 ## Engines I took inspiration from (in no particular order)
