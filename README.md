@@ -159,7 +159,6 @@ SPRT: llr 2.96 (100.4%), lbound -2.94, ubound 2.94 - H1 was accepted
 - [Smol.cs / NOSPRT](https://github.com/cj5716/smol.cs)
 - [200 token monstrosity](https://gist.github.com/mcthouacbb/2e87229fc971cd30762d6b481bdaac0b)
 - [Atadofanoobbot](https://github.com/mcthouacbb/Chess-Challenge-400/blob/400tokens/Chess-Challenge/src/My%20Bot/AtadOfANoobBot.cs)
-- [King Gambot IV](https://github.com/toanth/Chess-Challenge/blob/master/Chess-Challenge/src/My%20Bot/MyBot.cs)
 - [Viridithas](https://github.com/cosmobobak/viridithas/)
 - [Ethereal](https://github.com/AndyGrant/Ethereal)
 - [Altair](https://github.com/Alex2262/AltairChessEngine)
