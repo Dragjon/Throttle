@@ -132,6 +132,14 @@ Score of NewFP vs Original: 1646 - 1461 - 1002  [0.523] 4109
 ...      White vs Black: 1811 - 1296 - 1002  [0.563] 4109
 Elo difference: 15.7 +/- 9.2, LOS: 100.0 %, DrawRatio: 24.4 %
 SPRT: llr 2.96 (100.5%), lbound -2.94, ubound 2.94 - H1 was accepted
+
+v3.1 - Retuned eval with mobility
+Score of ReplacedEval vs Original: 1807 - 1610 - 789  [0.523] 4206
+...      ReplacedEval playing White: 1026 - 674 - 404  [0.584] 2104
+...      ReplacedEval playing Black: 781 - 936 - 385  [0.463] 2102
+...      White vs Black: 1962 - 1455 - 789  [0.560] 4206
+Elo difference: 16.3 +/- 9.5, LOS: 100.0 %, DrawRatio: 18.8 %
+SPRT: llr 2.96 (100.4%), lbound -2.94, ubound 2.94 - H1 was accepted
 ```
 
 ## Special thanks to (in no particular order)
