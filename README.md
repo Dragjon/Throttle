@@ -16,6 +16,7 @@ Connected with lichess using this [lichess-bot tool](https://github.com/lichess-
 ## Rating (Playing strength)
 | Version | Estimate CCRL Elo | CCRL Blitz         | CCRL Bullet         | CEDR         |
 |---------|-------------------|--------------------|---------------------|--------------|
+| 3.1     | 2379.6 +/- 64.2   | -                  | -                   | -            |
 | 3.0     | 2376.3 +/- 62.0   | -                  | -                   | -            |
 * Estimated Elo is calculated against <a href="https://gitlab.com/mhouppin/stash-bot">Stash 14.0</a> (sorry stash!)
 
