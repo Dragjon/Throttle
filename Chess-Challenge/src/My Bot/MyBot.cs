@@ -6,7 +6,7 @@ using static ChessChallenge.API.BitboardHelper;
 /*
 | Throttle - A c# UCI chess engine | SSS Version
   --------------------------------
-Version: 3.0
+Version: 3.1
 
 * Feature elo gain after 1.4
 ** Feature added at version after 1.4
