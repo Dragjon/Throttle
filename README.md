@@ -22,7 +22,7 @@ Connected with lichess using this [lichess-bot tool](https://github.com/lichess-
 
 ## Features
 ### Search:
-- Budget Aspiration window ```v2.4``` ```16.6 +/- 9.6```
+- <a href="https://www.chessprogramming.org/Aspiration_Windows"> Aspiration window </a> ```v2.4``` ```16.6 +/- 9.6```
 - <a href="https://www.chessprogramming.org/Negamax"> Fail-Soft Negamax Search </a>
 - <a href="https://www.chessprogramming.org/Quiescence_Search"> Quiescence Search </a>
 - <a href="https://www.chessprogramming.org/Principal_Variation_Search"> Principle Variation Search </a>
