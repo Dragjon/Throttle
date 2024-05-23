@@ -1,11 +1,10 @@
 # Throttle Chess Engine
-<img  src="https://github.com/Dragjon/Throttle/blob/main/images/throttle.png" width="300" height="300"></img><br><br><hr>
-Throttle is a UCI chess engine developed using [Sebastian Lague's chess framework](https://github.com/SebLague/Chess-Challenge). <hr>
-![](https://img.shields.io/badge/Version-3.1-green)
+<img  src="https://github.com/Dragjon/Throttle/blob/main/images/throttle.png" width="300" height="300"></img><br>![](https://img.shields.io/badge/Version-3.1-green)
 ![](https://img.shields.io/badge/CCRL_Elo_Estimate-2379-orange)
 [![Lichess rapid rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=rapid)](https://lichess.org/@/Tokenstealer/perf/rapid)
 [![Lichess blitz rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=blitz)](https://lichess.org/@/Tokenstealer/perf/blitz)
-[![Lichess bullet rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=bullet)](https://lichess.org/@/Tokenstealer/perf/bullet)
+[![Lichess bullet rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=bullet)](https://lichess.org/@/Tokenstealer/perf/bullet)<br><hr>
+Throttle is a UCI chess engine developed using [Sebastian Lague's chess framework](https://github.com/SebLague/Chess-Challenge). <hr>
 
 ## Playing
 You can either download my latest version in [releases](https://github.com/Dragjon/Throttle/releases) or play with me online at [lichess](https://lichess.org/@/TokenStealer) but note I may not always be online. If you choose to download me, also note that I am a UCI chess engine and I don't come with my own graphical interface. I would recommend you to use a GUI to test my engine if you are not familiar with the [UCI protocol](https://www.wbec-ridderkerk.nl/html/UCIProtocol.html) such as [Arena Chess GUI](http://www.playwitharena.de/) or [Banksia Chess GUI](https://banksiagui.com/).
