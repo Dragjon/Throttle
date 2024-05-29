@@ -6,7 +6,7 @@ using static ChessChallenge.API.BitboardHelper;
 /*
 | Throttle - A c# UCI chess engine | SSS Version
   --------------------------------
-Version: 3.2
+Version: 3.2.1
 
 * Feature elo gain after 1.4
 ** Feature added at version after 1.4
@@ -158,7 +158,7 @@ public class MyBot : IChessBot
     }
 
 
-    int[,] pst = {
+    static int[,] pst = {
         {
                 S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0),
                 S(39,130), S(68,123), S(45,124), S(69,76), S(56,72), S(35,88), S(-21,127), S(-49,140),
@@ -223,7 +223,7 @@ public class MyBot : IChessBot
     };
 
     // [PieceType - 3][attacks]
-    int[,] mobilityBonus = {
+    static int[,] mobilityBonus = {
         {S(-19,1), S(-5,-5), S(1,0), S(4,-5), S(6,-2), S(5,3), S(3,4), S(2,4), S(4,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0)},
         {S(-33,-49), S(-25,-34), S(-18,-28), S(-16,-18), S(-10,-6), S(-3,6), S(3,9), S(6,15), S(7,22), S(8,20), S(12,18), S(16,18), S(12,24), S(40,4), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0)},
         {S(-36,-37), S(-25,-26), S(-19,-23), S(-17,-7), S(-16,-5), S(-11,-3), S(-7,-3), S(-1,0), S(3,9), S(9,11), S(14,12), S(21,14), S(23,19), S(29,23), S(34,16), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0), S(0,0)},
@@ -231,7 +231,7 @@ public class MyBot : IChessBot
     };
 
     // King cornering for checkmating lone king
-    int[] kingEdge = {
+    static int[] kingEdge = {
     S(-95, -95),  S(-95, -95),  S(-90, -90),  S(-90, -90), S(-90, -90),  S(-90, -90),  S(-95, -95),  S(-95, -95),
     S(-95, -95),  S(-50, -50),  S(-50, -50),  S(-50, -50),  S(-50, -50),  S(-50, -50),  S(-50, -50),  S(-95, -95),
     S(-90, -90),  S(-50, -50),  S(-20, -20),  S(-20, -20),  S(-20, -20),  S(-20, -20),  S(-50, -50),  S(-90, -90),
@@ -240,36 +240,130 @@ public class MyBot : IChessBot
     S(-90, -90),  S(-50, -50),  S(-20, -20),  S(-20, -20),  S(-20, -20),  S(-20, -20),  S(-50, -50),  S(-90, -90),
     S(-95, -95),  S(-50, -50),  S(-50, -50),  S(-50, -50),  S(-50, -50),  S(-50, -50),  S(-50, -50),  S(-95, -95),
     S(-95, -95),  S(-95, -95),  S(-90, -90),  S(-90, -90), S(-90, -90),  S(-90, -90),  S(-95, -95),  S(-95, -95),
-};
+    };
 
     // Evaluation Weights
-    int tempo = S(18, 21);
-    int bishopPair = S(17, 58);
-    int[] piece_values = { S(81, 152), S(262, 330), S(280, 336), S(366, 602), S(773, 1100), S(0, 0) };
-    int[] game_phase_inc = { 0, 1, 1, 2, 4, 0, };
+    static int tempo = S(18, 21);
+    static int bishopPair = S(17, 58);
+    static int[] piece_values = { S(81, 152), S(262, 330), S(280, 336), S(366, 602), S(773, 1100), S(0, 0) };
+    static int[] game_phase_inc = { 0, 1, 1, 2, 4, 0, };
 
-    // this tuple is 24 bytes, so the transposition table is precisely 192MiB (~201 MB)
-    readonly (
-        ulong, // hash
-        ushort, // moveRaw
-        int, // score
-        int, // depth
-        int // bound BOUND_EXACT=[1, 2147483647), BOUND_LOWER=2147483647, BOUND_UPPER=0
-    )[] transpositionTable = new (ulong, ushort, int, int, int)[0x800000];
+    static readonly double ttSlotSizeMB = 0.000024;
+    static int hashSizeMB = 32;
+    static int hashSize = Convert.ToInt32(hashSizeMB / ttSlotSizeMB);
+
+    // this tuple is 24 bytes
+    static (
+        ulong, // hash 8 bytes
+        ushort, // moveRaw 4 bytes
+        int, // score 4 bytes
+        int, // depth 4 bytes
+        int // bound BOUND_EXACT=[1, 2147483647], BOUND_LOWER=2147483647, BOUND_UPPER=0 4 bytes
+    )[] transpositionTable = new (ulong, ushort, int, int, int)[hashSize];
 
     // Variables for search
-    int rfpMargin = 55;
-    int futilityMargin = 116;
-    int mateScore = -20000;
-    int infinity = 30000;
-    int hardBoundTimeRatio = 10;
-    int softBoundTimeRatio = 40;
+    static int rfpMargin = 55;
+    static int futilityMargin = 116;
+    static int mateScore = -20000;
+    static int infinity = 30000;
+    static int hardBoundTimeRatio = 10;
+    static int softBoundTimeRatio = 40;
 
 
     enum ScoreType { upperbound, lowerbound, none };
 
+    public static void setMargins(int VHashSizeMB = 32, int VrfpMargin = 55, int VfutilityMargin = 116, int VhardBoundTimeRatio = 10, int VsoftBoundTimeRatio = 40)
+    {
+        hashSizeMB = VHashSizeMB;
+        hashSize = Convert.ToInt32(hashSizeMB / ttSlotSizeMB);
+        transpositionTable = new (ulong, ushort, int, int, int)[hashSize];
+
+        rfpMargin = VrfpMargin;
+        futilityMargin = VfutilityMargin;
+        hardBoundTimeRatio = VhardBoundTimeRatio;
+        softBoundTimeRatio = VsoftBoundTimeRatio;
+    }
+
+    //Static Evaluation
+    public static int Eval(Board board)
+    {
+        int phase = 0;
+        int numPieceTypes = 0;
+        int kingSq = 0;
+        int score = tempo;
+        int piece_mobility;
+
+        foreach (bool isWhite in new[] { !board.IsWhiteToMove, board.IsWhiteToMove })
+        {
+            numPieceTypes = 0;
+            score = -score;
+
+            //       None (skipped)               King
+            for (var pieceIndex = 0; ++pieceIndex <= 6;)
+            {
+                var bitboard = board.GetPieceBitboard((PieceType)pieceIndex, isWhite);
+
+                if (bitboard != 0)
+                {
+                    numPieceTypes++;
+                }
+                // This and the following line is an efficient way to loop over each piece of a certain type.
+                // Instead of looping each square, we can skip empty squares by looking at a bitboard of each piece,
+                // and incrementally removing squares from it. More information: https://www.chessprogramming.org/Bitboards
+                while (bitboard != 0)
+                {
+                    var sq = ClearAndGetIndexOfLSB(ref bitboard);
+
+                    if (pieceIndex == 6)
+                    {
+                        if (isWhite)
+                        {
+                            kingSq = sq ^ 56;
+                        }
+                        else
+                        {
+                            kingSq = sq;
+                        }
+                    }
+                    else if (pieceIndex == 3 && bitboard != 0)
+                    {
+                        score += bishopPair;
+                    }
+                    if (pieceIndex > 1 && pieceIndex < 6)
+                    {
+                        piece_mobility = mobilityBonus[pieceIndex - 2, GetNumberOfSetBits(GetPieceAttacks((PieceType)pieceIndex, new Square(sq), board, isWhite))];
+                        score += piece_mobility;
+                    }
+                    if (isWhite) sq ^= 56;
+
+                    phase += game_phase_inc[pieceIndex - 1];
+
+                    score += pst[pieceIndex - 1, sq] + piece_values[pieceIndex - 1]; // PST + Material
+                }
+            }
+
+            if (numPieceTypes == 1)
+            {
+                score += kingEdge[kingSq];
+            }
+        }
+
+        // Tapered eval
+        if (phase > 24)
+            phase = 24;
+        int eg_phase = 24 - phase;
+
+        int mg_score = unpack_mg(score);
+        int eg_score = unpack_eg(score);
+
+        return ((mg_score * phase) + (eg_score * eg_phase)) / 24;
+
+    }
+
     public Move Think(Board board, Timer timer)
     {
+        int selDepth = 0;
+
         // Killer moves, 1 for each depth
         Move[] killers = new Move[4096];
 
@@ -288,7 +382,7 @@ public class MyBot : IChessBot
 
             if (!isMateScore)
             {
-                Console.WriteLine($"info depth {globalDepth} time {timer.MillisecondsElapsedThisTurn} nodes {nodes} nps {Convert.ToInt32(1000 * nodes / ((ulong)timer.MillisecondsElapsedThisTurn + 0.001))} score cp {score} {scoreTypeStr}pv {ChessChallenge.Chess.MoveUtility.GetMoveNameUCI(new(rootBestMove.RawValue))}");
+                Console.WriteLine($"info depth {globalDepth} seldepth {selDepth} time {timer.MillisecondsElapsedThisTurn} nodes {nodes} nps {Convert.ToInt32(1000 * nodes / ((ulong)timer.MillisecondsElapsedThisTurn + 0.001))} hashfull {1000 * nodes / 0x800000} score cp {score} {scoreTypeStr}pv {ChessChallenge.Chess.MoveUtility.GetMoveNameUCI(new(rootBestMove.RawValue))}");
             }
             else
             {
@@ -302,85 +396,11 @@ public class MyBot : IChessBot
                 {
                     mateIn = (-mateScore - score) / 2;
                 }
-                Console.WriteLine($"info depth {globalDepth} time {timer.MillisecondsElapsedThisTurn} nodes {nodes} nps {Convert.ToInt32(1000 * nodes / ((ulong)timer.MillisecondsElapsedThisTurn + 0.001))} score mate {mateIn} {scoreTypeStr}pv {ChessChallenge.Chess.MoveUtility.GetMoveNameUCI(new(rootBestMove.RawValue))}");
+                Console.WriteLine($"info depth {globalDepth} seldepth {selDepth} time {timer.MillisecondsElapsedThisTurn} nodes {nodes} nps {Convert.ToInt32(1000 * nodes / ((ulong)timer.MillisecondsElapsedThisTurn + 0.001))} hashfull {1000 * nodes / 0x800000} score mate {mateIn} {scoreTypeStr}pv {ChessChallenge.Chess.MoveUtility.GetMoveNameUCI(new(rootBestMove.RawValue))}");
             }
         }
 
-        // Evaluation
-        int Eval()
-        {
-            int phase = 0;
-            int numPieceTypes = 0;
-            int kingSq = 0;
-            int score = tempo;
-            int piece_mobility;
 
-            foreach (bool isWhite in new[] { !board.IsWhiteToMove, board.IsWhiteToMove })
-            {
-                numPieceTypes = 0;
-                score = -score;
-
-                //       None (skipped)               King
-                for (var pieceIndex = 0; ++pieceIndex <= 6;)
-                {
-                    var bitboard = board.GetPieceBitboard((PieceType)pieceIndex, isWhite);
-
-                    if (bitboard != 0)
-                    {
-                        numPieceTypes++;
-                    }
-                    // This and the following line is an efficient way to loop over each piece of a certain type.
-                    // Instead of looping each square, we can skip empty squares by looking at a bitboard of each piece,
-                    // and incrementally removing squares from it. More information: https://www.chessprogramming.org/Bitboards
-                    while (bitboard != 0)
-                    {
-                        var sq = ClearAndGetIndexOfLSB(ref bitboard);
-
-                        if (pieceIndex == 6)
-                        {
-                            if (isWhite)
-                            {
-                                kingSq = sq ^ 56;
-                            }
-                            else
-                            {
-                                kingSq = sq;
-                            }
-                        }
-                        else if (pieceIndex == 3 && bitboard != 0)
-                        {
-                            score += bishopPair;
-                        }
-                        if (pieceIndex > 1 && pieceIndex < 6)
-                        {
-                            piece_mobility = mobilityBonus[pieceIndex - 2, GetNumberOfSetBits(GetPieceAttacks((PieceType)pieceIndex, new Square(sq), board, isWhite))];
-                            score += piece_mobility;
-                        }
-                        if (isWhite) sq ^= 56;
-
-                        phase += game_phase_inc[pieceIndex - 1];
-
-                        score += pst[pieceIndex - 1, sq] + piece_values[pieceIndex - 1]; // PST + Material
-                    }
-                }
-
-                if (numPieceTypes == 1)
-                {
-                    score += kingEdge[kingSq];
-                }
-            }
-
-            // Tapered eval
-            if (phase > 24)
-                phase = 24;
-            int eg_phase = 24 - phase;
-
-            int mg_score = unpack_mg(score);
-            int eg_score = unpack_eg(score);
-
-            return ((mg_score * phase) + (eg_score * eg_phase)) / 24;
-
-        }
 
         // Quiescence Search
         int qSearch(int alpha, int beta, int ply)
@@ -405,7 +425,9 @@ public class MyBot : IChessBot
                 if (beta <= mating_value) return mating_value;
             }
 
-            int standPat = Eval();
+            selDepth = Math.Max(ply, selDepth);
+
+            int standPat = Eval(board);
 
             int bestScore = standPat;
 
@@ -415,7 +437,7 @@ public class MyBot : IChessBot
             if (board.IsDraw())
                 return 0;
 
-            ref var tt = ref transpositionTable[board.ZobristKey & 0x7FFFFF];
+            ref var tt = ref transpositionTable[board.ZobristKey & (ulong)(hashSize - 1)];
             var (ttHash, ttMoveRaw, score, ttDepth, ttBound) = tt;
 
             bool ttHit = ttHash == board.ZobristKey;
@@ -507,10 +529,12 @@ public class MyBot : IChessBot
                 if (beta <= mating_value) return mating_value;
             }
 
+            selDepth = Math.Max(ply, selDepth);
+
             bool isRoot = ply == 0;
             bool nonPv = alpha + 1 >= beta;
 
-            ref var tt = ref transpositionTable[board.ZobristKey & 0x7FFFFF];
+            ref var tt = ref transpositionTable[board.ZobristKey & (ulong)(hashSize - 1)];
             var (ttHash, ttMoveRaw, score, ttDepth, ttBound) = tt;
 
             bool ttHit = ttHash == board.ZobristKey;
@@ -542,7 +566,7 @@ public class MyBot : IChessBot
                 return qSearch(alpha, beta, ply);
 
             // Static eval needed for RFP and NMP
-            int eval = Eval();
+            int eval = Eval(board);
 
             // Index for killers
             int killerIndex = ply & 4095;
@@ -658,6 +682,7 @@ public class MyBot : IChessBot
 
         try
         {
+            //Console.WriteLine($"info string rfpMargin {rfpMargin} futilityMargin {futilityMargin} hardBoundTimeRation {hardBoundTimeRatio} softBoundTimeRatio {softBoundTimeRatio}");
 
             nodes = 0;
 
@@ -666,6 +691,8 @@ public class MyBot : IChessBot
             // Soft time limit
             for (; timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / softBoundTimeRatio; ++globalDepth)
             {
+                selDepth = 0;
+
                 int alpha = -infinity;
                 int beta = infinity;
 
@@ -697,7 +724,7 @@ public class MyBot : IChessBot
                     {
                         beta = Math.Min(newScore + delta, infinity);
 
-                        printInfo(alpha, ScoreType.lowerbound);
+                        printInfo(beta, ScoreType.lowerbound);
                     }
                     else
                         break;

@@ -13,6 +13,11 @@ namespace Chess_Challenge.Cli
 
         private IChessBot _bot;
         private Board _board;
+        private int _hashSizeMB;
+        private int _rfpMargin;
+        private int _futilityMargin;
+        private int _hardBoundTimeRatio;
+        private int _softBoundTimeRatio;
 
         public Uci()
         {
@@ -23,14 +28,74 @@ namespace Chess_Challenge.Cli
         {
             _bot = new MyBot();
             _board = Board.CreateBoardFromFEN(StartposFen);
+            _hashSizeMB = 32;
+            _rfpMargin = 55;
+            _futilityMargin = 116;
+            _hardBoundTimeRatio = 10;
+            _softBoundTimeRatio = 40;
         }
 
         private void HandleUci()
         {
-            Console.WriteLine("id name Throttle V3.0");
+            Console.WriteLine("id name Throttle V3.2");
             Console.WriteLine("id author Chess123easy");
+            Console.WriteLine("option name Hash type spin default 32 min 1 max 1024");
+            Console.WriteLine("option name rfpMargin type spin default 55 min 0 max 200");
+            Console.WriteLine("option name futilityMargin type spin default 116 min 0 max 400");
+            Console.WriteLine("option name hardBoundTimeRatio type spin default 10 min 1 max 100");
+            Console.WriteLine("option name softBoundTimeRatio type spin default 40 min 1 max 300");
             Console.WriteLine();
             Console.WriteLine("uciok");
+        }
+
+        private void HandleSetOption(IReadOnlyList<string> words)
+        {
+            if (words.Count < 5) return;
+
+            string optionName = words[1];
+            if (optionName == "name" && words[2] == "Hash" && words[3] == "value")
+            {
+                if (int.TryParse(words[4], out var hashValue))
+                {
+                    _hashSizeMB = hashValue;
+                    Console.WriteLine($"info string Hash set to {_hashSizeMB}");
+                }
+            }
+            else if (optionName == "name" && words[2] == "rfpMargin" && words[3] == "value")
+            {
+                if (int.TryParse(words[4], out var rfpValue))
+                {
+                    _rfpMargin = rfpValue;
+                    Console.WriteLine($"info string rfpMargin set to {_rfpMargin}");
+                }
+            }
+            else if (optionName == "name" && words[2] == "futilityMargin" && words[3] == "value")
+            {
+                if (int.TryParse(words[4], out var fpValue))
+                {
+                    _futilityMargin = fpValue;
+                    Console.WriteLine($"info string futilityMargin set to {_futilityMargin}");
+                }
+            }
+            else if (optionName == "name" && words[2] == "hardBoundTimeRatio" && words[3] == "value")
+            {
+                if (int.TryParse(words[4], out var hbtr))
+                {
+                    _hardBoundTimeRatio = hbtr;
+                    Console.WriteLine($"info string hardBoundTimeRatio set to {_hardBoundTimeRatio}");
+                }
+            }
+            else if (optionName == "name" && words[2] == "softBoundTimeRatio" && words[3] == "value")
+            {
+                if (int.TryParse(words[4], out var sbtr))
+                {
+                    _softBoundTimeRatio = sbtr;
+                    Console.WriteLine($"info string softBoundTimeRatio set to {_softBoundTimeRatio}");
+                }
+            }
+
+            MyBot.setMargins(_hashSizeMB, _rfpMargin, _futilityMargin, _hardBoundTimeRatio, _softBoundTimeRatio);
+
         }
 
         private void HandlePosition(IReadOnlyList<string> words)
@@ -182,6 +247,12 @@ namespace Chess_Challenge.Cli
                     return;
                 case "go":
                     HandleGo(words);
+                    return;
+                case "setoption":
+                    HandleSetOption(words);
+                    return;
+                case "seval":
+                    Console.WriteLine(MyBot.Eval(_board));
                     return;
             }
         }
