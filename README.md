@@ -1,11 +1,10 @@
 # Throttle Chess Engine
-<img  src="https://github.com/Dragjon/Throttle/blob/main/images/throttle.png" width="300" height="300"></img><br><br>
-Throttle is a UCI chess engine developed using [Sebastian Lague's chess framework](https://github.com/SebLague/Chess-Challenge). <br> <br>
-![](https://img.shields.io/badge/Version-3.0-green)
-![](https://img.shields.io/badge/CCRL_Elo_Estimate-2376-orange)
+<img  src="https://github.com/Dragjon/Throttle/blob/main/images/throttle.png" width="300" height="300"></img><br><br>![](https://img.shields.io/badge/Version-3.1-green)
+![](https://img.shields.io/badge/CCRL_Elo_Estimate-2379-orange)
 [![Lichess rapid rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=rapid)](https://lichess.org/@/Tokenstealer/perf/rapid)
 [![Lichess blitz rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=blitz)](https://lichess.org/@/Tokenstealer/perf/blitz)
-[![Lichess bullet rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=bullet)](https://lichess.org/@/Tokenstealer/perf/bullet)
+[![Lichess bullet rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=bullet)](https://lichess.org/@/Tokenstealer/perf/bullet)<br><hr>
+Throttle is a UCI chess engine developed using [Sebastian Lague's chess framework](https://github.com/SebLague/Chess-Challenge). <hr>
 
 ## Playing
 You can either download my latest version in [releases](https://github.com/Dragjon/Throttle/releases) or play with me online at [lichess](https://lichess.org/@/TokenStealer) but note I may not always be online. If you choose to download me, also note that I am a UCI chess engine and I don't come with my own graphical interface. I would recommend you to use a GUI to test my engine if you are not familiar with the [UCI protocol](https://www.wbec-ridderkerk.nl/html/UCIProtocol.html) such as [Arena Chess GUI](http://www.playwitharena.de/) or [Banksia Chess GUI](https://banksiagui.com/).
@@ -16,12 +15,13 @@ Connected with lichess using this [lichess-bot tool](https://github.com/lichess-
 ## Rating (Playing strength)
 | Version | Estimate CCRL Elo | CCRL Blitz         | CCRL Bullet         | CEDR         |
 |---------|-------------------|--------------------|---------------------|--------------|
+| 3.1     | 2379.6 +/- 64.2   | -                  | -                   | -            |
 | 3.0     | 2376.3 +/- 62.0   | -                  | -                   | -            |
 * Estimated Elo is calculated against <a href="https://gitlab.com/mhouppin/stash-bot">Stash 14.0</a> (sorry stash!)
 
 ## Features
 ### Search:
-- Budget Aspiration window ```v2.4``` ```16.6 +/- 9.6```
+- <a href="https://www.chessprogramming.org/Aspiration_Windows"> Aspiration window </a> ```v2.4``` ```16.6 +/- 9.6```
 - <a href="https://www.chessprogramming.org/Negamax"> Fail-Soft Negamax Search </a>
 - <a href="https://www.chessprogramming.org/Quiescence_Search"> Quiescence Search </a>
 - <a href="https://www.chessprogramming.org/Principal_Variation_Search"> Principle Variation Search </a>
@@ -158,9 +158,9 @@ SPRT: llr 2.96 (100.4%), lbound -2.94, ubound 2.94 - H1 was accepted
 - [Smol.cs / NOSPRT](https://github.com/cj5716/smol.cs)
 - [200 token monstrosity](https://gist.github.com/mcthouacbb/2e87229fc971cd30762d6b481bdaac0b)
 - [Atadofanoobbot](https://github.com/mcthouacbb/Chess-Challenge-400/blob/400tokens/Chess-Challenge/src/My%20Bot/AtadOfANoobBot.cs)
-- [King Gambot IV](https://github.com/toanth/Chess-Challenge/blob/master/Chess-Challenge/src/My%20Bot/MyBot.cs)
 - [Viridithas](https://github.com/cosmobobak/viridithas/)
 - [Ethereal](https://github.com/AndyGrant/Ethereal)
+- [Altair](https://github.com/Alex2262/AltairChessEngine)
 
 ## Resources I found useful
 - https://minuskelvin.net/chesswiki/ (Updated Chess programming wiki)
