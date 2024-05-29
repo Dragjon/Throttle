@@ -62,7 +62,7 @@ Connected with lichess using this [lichess-bot tool](https://github.com/lichess-
 - Mobility
 
 ### UCI Functionality (adapted from gediminas' code)
-#### Most standard UCI commands
+#### Most basic UCI commands
 - ```uci```
 - ```setoption name [name] value [value]```
 - ```position [startpos/FEN] [moves]```
