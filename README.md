@@ -27,29 +27,30 @@ Connected with lichess using this [lichess-bot tool](https://github.com/lichess-
 - <a href="https://www.chessprogramming.org/Principal_Variation_Search"> Principle Variation Search </a>
 - Triple PVS ```v1.5``` ```21.3 +/- 11.1```
 
-### Pruning:
+#### Pruning:
 - <a href="https://www.chessprogramming.org/Transposition_Table">Actual TT pruning</a> ```v2.1``` ```136.4 +/- 31.2```
 - <a href="https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning">A/B Pruning</a>
 - <a href="https://www.chessprogramming.org/Null_Move_Pruning">Null Move Pruning</a>
 - <a href="https://www.chessprogramming.org/Reverse_Futility_Pruning">Reverse Futility Pruning</a>
-- <a href="https://www.chessprogramming.org/Futility_Pruning">Futility Pruning (square)</a> ```v3.0``` ```15.7 +/- 9.2 vs Normal futility pruning```
+- <a href="https://www.chessprogramming.org/Futility_Pruning">Futility Pruning (depth*depth*margin)</a> ```v3.0``` ```15.7 +/- 9.2 vs Normal futility pruning```
 - Quiescence Search Standing Pat Pruning
 - <a href="https://www.chessprogramming.org/Delta_Pruning">Quiescence Search Delta Pruning</a> ```v2.5``` ```11.7 +/- 7.7```
+- <a href="https://www.chessprogramming.org/Mate_Distance_Pruning">Mate Distancing Pruning</a>
 
-### Reductions:
+#### Reductions:
 - Internal Iterative Reduction
 - <a href="https://www.chessprogramming.org/Late_Move_Reductions">Late move reductions with triple pvs</a>
 
-### Extensions:
+#### Extensions:
 - <a href="https://www.chessprogramming.org/Check_Extensions">Check Extensions</a>
 
-### Ordering:
+#### Ordering:
 - TT Moves
 - <a href="https://www.chessprogramming.org/MVV-LVA">MVV-LVA (for good captures)</a>
 - <a href="https://www.chessprogramming.org/Killer_Move">Killer moves (quiets)</a>
 - <a href="https://www.chessprogramming.org/History_Heuristic">History moves (quiets)</a> ```v2.0``` ```67.9 +/- 20.9```
 
-### Time Management:
+#### Time Management:
 - Hard and Soft Time Management
 
 ### Evaluation:
@@ -186,4 +187,128 @@ SPRT: llr 2.96 (100.4%), lbound -2.94, ubound 2.94 - H1 was accepted
 - https://discord.gg/dVgkdqqt (Engine programming server)
 
 ## TODO
-- Make it stronger 
+### Search
+- [x] Aspiration window ```v2.4``` ```16.6 +/- 9.6```
+- [x] Fail-Soft Negamax Search
+- [x] Quiescence Search
+- [x] Principle Variation Search
+- [x] Triple PVS ```v1.5``` ```21.3 +/- 11.1```
+- [ ] Lazy SMP multithreading
+- [ ] Pondering
+      
+#### Pruning
+- [x] Actual TT pruning ```v2.1``` ```136.4 +/- 31.2```
+- [x] A/B Pruning
+- [x] Null Move Pruning
+- [x] Reverse Futility Pruning
+- [x] Futility Pruning (depth*depth*margin) ```v3.0``` ```15.7 +/- 9.2 vs Normal futility pruning```
+- [x] Quiescence Search Standing Pat Pruning
+- [x] Quiescence Search Delta Pruning ```v2.5``` ```11.7 +/- 7.7```
+- [x] Mate distancing pruning
+- [ ] Static Exchange Evaluation Pruning (QSearch)
+- [ ] Late Move Pruning
+- [ ] Multicut
+- [ ] Prob-cut
+- [ ] History leaf pruning
+- [ ] Parity pruning
+- [ ] Uncertainty cutoffs
+- [ ] AEL-Pruning
+- [ ] Enhanced forward pruning
+
+#### Reductions
+- [x] Internal Iterative Reduction
+- [x] Late move reductions with triple pvs
+- [ ] Internal Iterative deepening
+- [ ] Fail-high reductions
+- [ ] Rank-cut
+- [ ] Razoring
+
+#### Extensions
+- [x] Check Extensions
+- [ ] Capture extensions
+- [ ] Mate threat extensions
+- [ ] One reply extension
+- [ ] Passed pawn extension
+- [ ] Pv extension
+- [ ] Recapture extension
+- [ ] Singular extensions
+
+#### Ordering
+- [x] TT Moves
+- [x] MVV-LVA (for good captures)
+- [x] iller moves (quiets)
+- [x] History moves (quiets) ```v2.0``` ```67.9 +/- 20.9```
+- [ ] History gravity
+- [ ] History ageing
+- [ ] History malus
+- [ ] 1-ply continuation history
+- [ ] 2-ply continuation history
+- [ ] More extensive MVV-LVA ordering
+- [ ] Capture history
+- [ ] Counter-moves
+
+
+#### Time Management
+- [x] Hard Bound
+- [x] Soft Bound 
+      
+### Evaluation
+- [x] Piece Square Tables
+- [x] Piece Weights
+- [x] Tempo
+- [x] Piece mobility (no king no pawn)
+
+#### Pawn
+- [ ] Pawn shield
+- [ ] Pawn storm
+- [ ] Strong pawn bonus
+- [ ] Doubled pawn malus
+- [ ] Passed pawn bonus
+- [ ] Phalanx pawn bonus
+- [ ] Isolated pawn malus
+
+#### Piece
+- [ ] Piece attacking enemy bonus
+- [ ] Pawn defending piece bonus
+- [ ] Trapped piece malus
+      
+##### General Major Pieces
+- [ ] Major pieces on open file bonus
+- [ ] Major piece on semi-open file bonus
+      
+##### General Minor Pieces
+- [ ] Minor piece outpost bonus
+- [ ] Undefended minor piece malus
+      
+##### Knight
+- [ ] Pawn-count relative weight
+- [ ] Blocking C-Pawn malus (in closed openings)
+- [ ] Omit squares controlled by enemy pawns for mobility
+
+##### Bishop
+- [x] Bishop pair
+- [ ] Bad bishop
+- [ ] Color weakness (also considering majority of pawns on what colored square)
+- [ ] Fianchettoed bishop bonus (a fianchettoed bishop shouldn't be exchanged)
+- [ ] Returning bishop bonus
+
+##### Rook
+- [ ] Pawn-count relative weight
+- [ ] Rook behind passed-pawns
+- [ ] Rook blocked by uncastled king malus
+- [ ] Rook connecting bonus
+
+##### Queen
+- [ ] Early development malus
+
+##### King
+- [x] King cornering for endgame checkmate (UNTUNED!!)
+- [ ] King tropism
+- [ ] King-relative PSQTs
+- [ ] King Virtual mobility
+- [ ] King on open file malus
+- [ ] King on semi-open file malus
+- [ ] King-relative to pawn chain malus
+- [ ] Attacking king zone
+- [ ] X-Rays/pins malus
+- [ ] Castling rights
