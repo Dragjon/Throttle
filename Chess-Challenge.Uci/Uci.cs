@@ -18,6 +18,8 @@ namespace Chess_Challenge.Cli
         private int _futilityMargin;
         private int _hardBoundTimeRatio;
         private int _softBoundTimeRatio;
+        private int _aspDepth;
+        private int _aspDelta;
 
         public Uci()
         {
@@ -28,22 +30,26 @@ namespace Chess_Challenge.Cli
         {
             _bot = new MyBot();
             _board = Board.CreateBoardFromFEN(StartposFen);
-            _hashSizeMB = 32;
+            _hashSizeMB = 201;
             _rfpMargin = 55;
             _futilityMargin = 116;
             _hardBoundTimeRatio = 10;
             _softBoundTimeRatio = 40;
+            _aspDepth = 3;
+            _aspDelta = 10;
         }
 
         private void HandleUci()
         {
             Console.WriteLine("id name Throttle V3.2");
             Console.WriteLine("id author Chess123easy");
-            Console.WriteLine("option name Hash type spin default 32 min 1 max 1024");
+            Console.WriteLine("option name Hash type spin default 256 min 1 max 1024");
             Console.WriteLine("option name rfpMargin type spin default 55 min 0 max 200");
             Console.WriteLine("option name futilityMargin type spin default 116 min 0 max 400");
             Console.WriteLine("option name hardBoundTimeRatio type spin default 10 min 1 max 100");
             Console.WriteLine("option name softBoundTimeRatio type spin default 40 min 1 max 300");
+            Console.WriteLine("option name aspDepth type spin default 3 min 0 max 10");
+            Console.WriteLine("option name aspDelta type spin default 10 min 0 max 100");
             Console.WriteLine();
             Console.WriteLine("uciok");
         }
@@ -91,6 +97,24 @@ namespace Chess_Challenge.Cli
                 {
                     _softBoundTimeRatio = sbtr;
                     Console.WriteLine($"info string softBoundTimeRatio set to {_softBoundTimeRatio}");
+                }
+            }
+
+            else if (optionName == "name" && words[2] == "aspDepth" && words[3] == "value")
+            {
+                if (int.TryParse(words[4], out var aspdh))
+                {
+                    _aspDepth = aspdh;
+                    Console.WriteLine($"info string aspDepth set to {_aspDepth}");
+                }
+            }
+
+            else if (optionName == "name" && words[2] == "aspDelta" && words[3] == "value")
+            {
+                if (int.TryParse(words[4], out var aspda))
+                {
+                    _aspDelta = aspda;
+                    Console.WriteLine($"info string aspDelta set to {_aspDelta}");
                 }
             }
 
@@ -198,14 +222,14 @@ namespace Chess_Challenge.Cli
                     {
                         if (int.TryParse(nextWord, out var wtime))
                         {
-                            ms = wtime;
+                            ms = Math.Abs(wtime);
                         }
                     }
                     if (word == "btime" && !_board.IsWhiteToMove)
                     {
                         if (int.TryParse(nextWord, out var btime))
                         {
-                            ms = btime;
+                            ms = Math.Abs(btime);
                         }
                     }
                 }

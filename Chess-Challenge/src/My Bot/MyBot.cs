@@ -265,6 +265,8 @@ public class MyBot : IChessBot
     static int rfpMargin = 55;
     static int futilityMargin = 116;
     static int mateScore = -20000;
+    static int aspDepth = 3;
+    static int aspDelta = 10;
     static int infinity = 30000;
     static int hardBoundTimeRatio = 10;
     static int softBoundTimeRatio = 40;
@@ -272,7 +274,7 @@ public class MyBot : IChessBot
 
     enum ScoreType { upperbound, lowerbound, none };
 
-    public static void setMargins(int VHashSizeMB = 201, int VrfpMargin = 55, int VfutilityMargin = 116, int VhardBoundTimeRatio = 10, int VsoftBoundTimeRatio = 40)
+    public static void setMargins(int VHashSizeMB = 201, int VrfpMargin = 55, int VfutilityMargin = 116, int VhardBoundTimeRatio = 10, int VsoftBoundTimeRatio = 40, int VaspDepth = 3, int VaspDelta = 10)
     {
         hashSizeMB = VHashSizeMB;
         hashSize = Convert.ToInt32(hashSizeMB / ttSlotSizeMB);
@@ -282,6 +284,8 @@ public class MyBot : IChessBot
         futilityMargin = VfutilityMargin;
         hardBoundTimeRatio = VhardBoundTimeRatio;
         softBoundTimeRatio = VsoftBoundTimeRatio;
+        aspDepth = VaspDepth;
+        aspDelta = VaspDelta;
     }
 
     //Static Evaluation
@@ -372,7 +376,7 @@ public class MyBot : IChessBot
         int[] history = new int[4096];
 
         int globalDepth = 1; // To be incremented for each iterative loop
-        ulong nodes; // To keep track of searched positions in 1 iterative loop
+        ulong nodes = 0; // To keep track of searched positions in 1 iterative loop
         Move rootBestMove = Move.NullMove;
 
         void printInfo(int score, ScoreType scoreType)
@@ -407,7 +411,7 @@ public class MyBot : IChessBot
         int qSearch(int alpha, int beta, int ply)
         {
             // Hard bound time management
-            if (timer.MillisecondsElapsedThisTurn >= timer.MillisecondsRemaining / hardBoundTimeRatio) throw null;
+            if (globalDepth > 1 && timer.MillisecondsElapsedThisTurn >= timer.MillisecondsRemaining / hardBoundTimeRatio) throw null;
 
             selDepth = Math.Max(ply, selDepth);
 
@@ -578,6 +582,10 @@ public class MyBot : IChessBot
             {
                 eval = -search(depth - 4, ply + 1, 1 - beta, -beta);
                 board.UndoSkipTurn();
+
+
+                // IMPROVEMENT : RETURN BETA INSTEAD OF SCORE
+
                 if (eval >= beta) return eval;
             }
 
@@ -683,35 +691,24 @@ public class MyBot : IChessBot
         {
 
             nodes = 0;
-
             int score = 0;
-
             // Soft time limit
             for (; timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / softBoundTimeRatio; ++globalDepth)
             {
-
-                selDepth = 0;
-
                 int alpha = -infinity;
                 int beta = infinity;
-
                 int delta = 0;
-
-                if (globalDepth > 3)
+                if (globalDepth > aspDepth)
                 {
-                    delta = 10;
+                    delta = aspDelta;
                     alpha = score - delta;
                     beta = score + delta;
                 }
-
                 killers = new Move[4096];
-
                 int newScore;
-
                 while (true)
                 {
                     newScore = search(globalDepth, 0, alpha, beta);
-
                     if (newScore <= alpha)
                     {
                         beta = (newScore + beta) / 2;
@@ -723,11 +720,10 @@ public class MyBot : IChessBot
                     {
                         beta = Math.Min(newScore + delta, infinity);
 
-                        printInfo(alpha, ScoreType.lowerbound);
+                        printInfo(beta, ScoreType.lowerbound);
                     }
                     else
                         break;
-
                     if (delta <= 500)
                         delta += delta;
                     else
@@ -740,6 +736,7 @@ public class MyBot : IChessBot
             }
         }
         catch { }
+
         return rootBestMove;
     }
 }
