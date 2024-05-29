@@ -1,5 +1,5 @@
 # Throttle Chess Engine
-<img  src="https://github.com/Dragjon/Throttle/blob/main/images/throttle.png" width="300" height="300"></img><br><br>![](https://img.shields.io/badge/Version-3.1-green)
+<img  src="https://github.com/Dragjon/Throttle/blob/main/images/throttle.png" width="300" height="300"></img><br><br>![](https://img.shields.io/badge/Version-3.2.1-green)
 ![](https://img.shields.io/badge/CCRL_Elo_Estimate-2379-orange)
 [![Lichess rapid rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=rapid)](https://lichess.org/@/Tokenstealer/perf/rapid)
 [![Lichess blitz rating](https://lichess-shield.vercel.app/api?username=Tokenstealer&format=blitz)](https://lichess.org/@/Tokenstealer/perf/blitz)
@@ -60,6 +60,22 @@ Connected with lichess using this [lichess-bot tool](https://github.com/lichess-
 - Tapered Eval
 - Tempo
 - Mobility
+
+### UCI Functionality (adapted from gediminas' code)
+#### Most basic UCI commands
+- ```uci```
+- ```setoption name [name] value [value]```
+- ```position [startpos/FEN] [moves]```
+- ```isready```
+- ```go [wtime] [winc] [btime] [binc]```
+#### Options
+- ```Hash type spin default 32 min 1 max 1024``` - TT Hash size in MB
+- ```rfpMargin type spin default 55 min 0 max 200``` - Reverse Futility Pruning margin
+- ```futilityMargin type spin default 116 min 0 max 400``` - Futility Pruning margin
+- ```hardBoundTimeRatio type spin default 10 min 1 max 100``` - Hard Bound time management ratio
+- ```softBoundTimeRatio type spin default 40 min 1 max 300``` - Soft Bound time management ratio
+#### Other nonstandard commands
+- ```sevel``` - Get the static evaluation of the position
 
 ## Log of feature addition
 ```
