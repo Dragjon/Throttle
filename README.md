@@ -62,7 +62,12 @@ Connected with lichess using this [lichess-bot tool](https://github.com/lichess-
 - Mobility
 
 ### UCI Functionality (adapted from gediminas' code)
-- Most standard UCI commands
+#### Most standard UCI commands
+- ```uci```
+- ```setoption name [name] value [value]```
+- ```position [startpos/FEN] [moves]```
+- ```isready```
+- ```go [wtime] [winc] [btime] [binc]```
 #### Options
 - ```Hash type spin default 32 min 1 max 1024``` TT Hash size in MB
 - ```rfpMargin type spin default 55 min 0 max 200``` Reverse Futility Pruning margin
