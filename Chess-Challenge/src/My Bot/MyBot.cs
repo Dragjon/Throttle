@@ -249,7 +249,7 @@ public class MyBot : IChessBot
     static int[] game_phase_inc = { 0, 1, 1, 2, 4, 0, };
 
     static readonly double ttSlotSizeMB = 0.000024;
-    static int hashSizeMB = 32;
+    static int hashSizeMB = 201;
     static int hashSize = Convert.ToInt32(hashSizeMB / ttSlotSizeMB);
 
     // this tuple is 24 bytes
@@ -272,7 +272,7 @@ public class MyBot : IChessBot
 
     enum ScoreType { upperbound, lowerbound, none };
 
-    public static void setMargins(int VHashSizeMB = 32, int VrfpMargin = 55, int VfutilityMargin = 116, int VhardBoundTimeRatio = 10, int VsoftBoundTimeRatio = 40)
+    public static void setMargins(int VHashSizeMB = 201, int VrfpMargin = 55, int VfutilityMargin = 116, int VhardBoundTimeRatio = 10, int VsoftBoundTimeRatio = 40)
     {
         hashSizeMB = VHashSizeMB;
         hashSize = Convert.ToInt32(hashSizeMB / ttSlotSizeMB);
@@ -285,6 +285,7 @@ public class MyBot : IChessBot
     }
 
     //Static Evaluation
+    // Evaluation
     public static int Eval(Board board)
     {
         int phase = 0;
@@ -382,7 +383,7 @@ public class MyBot : IChessBot
 
             if (!isMateScore)
             {
-                Console.WriteLine($"info depth {globalDepth} seldepth {selDepth} time {timer.MillisecondsElapsedThisTurn} nodes {nodes} nps {Convert.ToInt32(1000 * nodes / ((ulong)timer.MillisecondsElapsedThisTurn + 0.001))} hashfull {1000 * nodes / 0x800000} score cp {score} {scoreTypeStr}pv {ChessChallenge.Chess.MoveUtility.GetMoveNameUCI(new(rootBestMove.RawValue))}");
+                Console.WriteLine($"info depth {globalDepth} seldepth {selDepth} time {timer.MillisecondsElapsedThisTurn} nodes {nodes} nps {Convert.ToInt32(1000 * nodes / ((ulong)timer.MillisecondsElapsedThisTurn + 0.001))} hashfull {1000 * nodes / (ulong)hashSize} score cp {score} {scoreTypeStr}pv {ChessChallenge.Chess.MoveUtility.GetMoveNameUCI(new(rootBestMove.RawValue))}");
             }
             else
             {
@@ -396,7 +397,7 @@ public class MyBot : IChessBot
                 {
                     mateIn = (-mateScore - score) / 2;
                 }
-                Console.WriteLine($"info depth {globalDepth} seldepth {selDepth} time {timer.MillisecondsElapsedThisTurn} nodes {nodes} nps {Convert.ToInt32(1000 * nodes / ((ulong)timer.MillisecondsElapsedThisTurn + 0.001))} hashfull {1000 * nodes / 0x800000} score mate {mateIn} {scoreTypeStr}pv {ChessChallenge.Chess.MoveUtility.GetMoveNameUCI(new(rootBestMove.RawValue))}");
+                Console.WriteLine($"info depth {globalDepth} seldepth {selDepth} time {timer.MillisecondsElapsedThisTurn} nodes {nodes} nps {Convert.ToInt32(1000 * nodes / ((ulong)timer.MillisecondsElapsedThisTurn + 0.001))} hashfull {1000 * nodes / (ulong)hashSize} score mate {mateIn} {scoreTypeStr}pv {ChessChallenge.Chess.MoveUtility.GetMoveNameUCI(new(rootBestMove.RawValue))}");
             }
         }
 
@@ -408,6 +409,7 @@ public class MyBot : IChessBot
             // Hard bound time management
             if (timer.MillisecondsElapsedThisTurn >= timer.MillisecondsRemaining / hardBoundTimeRatio) throw null;
 
+            selDepth = Math.Max(ply, selDepth);
 
             int mating_value = -mateScore - ply;
 
@@ -424,8 +426,6 @@ public class MyBot : IChessBot
                 alpha = mating_value;
                 if (beta <= mating_value) return mating_value;
             }
-
-            selDepth = Math.Max(ply, selDepth);
 
             int standPat = Eval(board);
 
@@ -512,6 +512,7 @@ public class MyBot : IChessBot
             // Hard time limit
             if (depth > 1 && timer.MillisecondsElapsedThisTurn >= timer.MillisecondsRemaining / hardBoundTimeRatio) throw null;
 
+            selDepth = Math.Max(ply, selDepth);
 
             int mating_value = -mateScore - ply;
 
@@ -528,8 +529,6 @@ public class MyBot : IChessBot
                 alpha = mating_value;
                 if (beta <= mating_value) return mating_value;
             }
-
-            selDepth = Math.Max(ply, selDepth);
 
             bool isRoot = ply == 0;
             bool nonPv = alpha + 1 >= beta;
@@ -682,7 +681,6 @@ public class MyBot : IChessBot
 
         try
         {
-            //Console.WriteLine($"info string rfpMargin {rfpMargin} futilityMargin {futilityMargin} hardBoundTimeRation {hardBoundTimeRatio} softBoundTimeRatio {softBoundTimeRatio}");
 
             nodes = 0;
 
@@ -691,6 +689,7 @@ public class MyBot : IChessBot
             // Soft time limit
             for (; timer.MillisecondsElapsedThisTurn < timer.MillisecondsRemaining / softBoundTimeRatio; ++globalDepth)
             {
+
                 selDepth = 0;
 
                 int alpha = -infinity;
@@ -724,7 +723,7 @@ public class MyBot : IChessBot
                     {
                         beta = Math.Min(newScore + delta, infinity);
 
-                        printInfo(beta, ScoreType.lowerbound);
+                        printInfo(alpha, ScoreType.lowerbound);
                     }
                     else
                         break;
