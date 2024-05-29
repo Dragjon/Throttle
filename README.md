@@ -64,12 +64,11 @@ Connected with lichess using this [lichess-bot tool](https://github.com/lichess-
 ### UCI Functionality (adapted from gediminas' code)
 - Most standard UCI commands
 #### Options
-- ```Hash default 32```
-- ```Hash type spin default 32 min 1 max 1024```
-- ```rfpMargin type spin default 55 min 0 max 200```
-- ```futilityMargin type spin default 116 min 0 max 400```
-- ```hardBoundTimeRatio type spin default 10 min 1 max 100```
-- ```softBoundTimeRatio type spin default 40 min 1 max 300```
+- ```Hash type spin default 32 min 1 max 1024``` TT Hash size in MB
+- ```rfpMargin type spin default 55 min 0 max 200``` Reverse Futility Pruning margin
+- ```futilityMargin type spin default 116 min 0 max 400``` Futility Pruning margin
+- ```hardBoundTimeRatio type spin default 10 min 1 max 100``` Hard Bound time management ratio
+- ```softBoundTimeRatio type spin default 40 min 1 max 300``` Soft Bound time management ratio
 #### Other nonstandard commands
 - ```sevel``` Get the static evaluation of the position
 
