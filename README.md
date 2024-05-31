@@ -1,3 +1,5 @@
+# Move
+Throttle has been rewritten from scratch as <a href="https://github.com/Dragjon/Polonium">Polonium</a>
 # Throttle Chess Engine
 <img  src="https://github.com/Dragjon/Throttle/blob/main/images/throttle.png" width="300" height="300"></img><br><br>![](https://img.shields.io/badge/Version-3.2.2-green)
 ![](https://img.shields.io/badge/CCRL_Elo_Estimate-2379-orange)
